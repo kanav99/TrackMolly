@@ -18,6 +18,7 @@
     "@react-navigation/stack": "^5.13.0",
     "@reduxjs/toolkit": "^1.5.0",
     "react": "16.13.1",
+    "react-animated-popup": "^0.1.1",
     "react-native": "0.63.4",
     "react-native-geolocation-service": "^5.1.1",
     "react-native-gesture-handler": "^1.9.0",

@@ -27,7 +27,13 @@ const iconMap = (label) => {
   }
 };
 
-export function TabBar({state, descriptors, navigation}) {
+export function TabBar({
+  state,
+  descriptors,
+  navigation,
+  fadeInFunc,
+  fadeOutFunc,
+}) {
   const focusedOptions = descriptors[state.routes[state.index].key].options;
 
   if (focusedOptions.tabBarVisible === false) {
@@ -104,7 +110,10 @@ export function TabBar({state, descriptors, navigation}) {
         );
       })}
       <View style={[{width: tabWidth}, style.alarmContainer]}>
-        <TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            fadeInFunc();
+          }}>
           <Image source={alertButton} style={style.alarmButton} />
         </TouchableOpacity>
       </View>
