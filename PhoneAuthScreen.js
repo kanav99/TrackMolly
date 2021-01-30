@@ -50,9 +50,14 @@ class PhoneAuthScreen extends Component {
     if (verificationCode.length == 6) {
       confirmResult
         .confirm(verificationCode)
-        .then((user) => {
-          this.setState({userId: user});
-          console.log(user);
+        .then((result) => {
+          this.setState({userId: result.user.uid});
+          if (result.additionalUserInfo.isNewUser) {
+            alert('Hello New User');
+          } else {
+            alert('Hello Existing User');
+          }
+          console.log(this.state.userId);
         })
         .catch((error) => {
           alert(error.message);
@@ -85,6 +90,7 @@ class PhoneAuthScreen extends Component {
   };
 
   render() {
+    console.log(auth().currentUser);
     return (
       <SafeAreaView>
         <View>
