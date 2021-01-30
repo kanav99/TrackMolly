@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#6739B7',
     borderRadius: 6,
-    width: 312,
+    width: '100%',
     height: 38,
   },
   appButtonText: {

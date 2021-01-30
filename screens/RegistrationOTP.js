@@ -10,13 +10,33 @@ import {
 import Balls from './Balls';
 import styled from 'styled-components';
 import LongButton from './LongButton';
+import globalData from '../Globals';
 
 class RegistrationMobileNumber extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      phone: '+91 9599346343',
+      phone:
+        props.route.params.phone == undefined ? '' : props.route.params.phone,
+      otp: '',
     };
+    this.confirmOTP = this.confirmOTP.bind(this);
+  }
+
+  confirmOTP() {
+    globalData.otp
+      .confirm(this.state.otp)
+      .then((result) => {
+        if (result.additionalUserInfo.isNewUser) {
+          alert('Hello New User ' + result.user.uid);
+        } else {
+          alert('Hello Existing User ' + result.user.uid);
+        }
+      })
+      .catch((error) => {
+        alert(error.message);
+        console.log(error);
+      });
   }
 
   render() {
@@ -33,10 +53,16 @@ class RegistrationMobileNumber extends React.Component {
                 style={styles.otpInput}
                 selectionColor="#6739b7"
                 keyboardType="number-pad"
+                value={this.state.otp}
+                onChangeText={(val) => {
+                  this.setState({
+                    otp: val,
+                  });
+                }}
                 maxLength={6}></TextInput>
             </View>
             <ButtonGroup>
-              <LongButton title="Verify" />
+              <LongButton title="Verify" onPress={this.confirmOTP} />
             </ButtonGroup>
           </View>
         </View>
@@ -75,8 +101,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     display: 'flex',
     flexDirection: 'column',
-
-    backgroundColor: '#ffff00',
   },
   inner: {
     width: 195,
@@ -104,6 +128,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     fontSize: 32,
     color: '#6739B7',
+    letterSpacing: 10,
   },
   verify: {
     right: 24,
@@ -114,7 +139,7 @@ const ButtonGroup = styled.View`
   width: 100%;
   height: 72px;
   left: 0px;
-  top: 135px;
+  top: 40px;
 
   /* Inside Auto Layout */
   flex: none;

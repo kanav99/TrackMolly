@@ -18,6 +18,8 @@ import {
   Button,
 } from 'react-native';
 
+import globalData from './Globals';
+
 import Geolocation from 'react-native-geolocation-service';
 import firebase from '@react-native-firebase/app';
 import auth from '@react-native-firebase/auth';
@@ -48,7 +50,7 @@ const App = () => {
     <NavigationContainer>
       <Stack.Navigator
         screenOptions={{headerShown: false}}
-        initialRouteName="RegistrationOTP">
+        initialRouteName="RegistrationMobileNumber">
         <Stack.Screen name="Splash" component={SplashScreen} />
         <Stack.Screen
           name="RegistrationMobileNumber"

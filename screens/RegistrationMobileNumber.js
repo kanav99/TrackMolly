@@ -3,6 +3,8 @@ import {Button, SafeAreaView} from 'react-native';
 import styled from 'styled-components';
 import Balls from './Balls';
 import auth from '@react-native-firebase/auth';
+import LongButton from './LongButton';
+import globalData from '../Globals';
 
 class RegistrationMobileNumber extends React.Component {
   constructor(props) {
@@ -26,11 +28,13 @@ class RegistrationMobileNumber extends React.Component {
         .signInWithPhoneNumber('+91' + this.state.phone)
         .then((confirmResult) => {
           console.log(confirmResult);
-          this.state.navigation.navigate('RegistrationOTP');
+          globalData.otp = confirmResult;
+          this.state.navigation.navigate('RegistrationOTP', {
+            phone: '+91' + this.state.phone,
+          });
         })
         .catch((error) => {
           // alert(error.message);
-
           console.log(error);
         });
     } else {
@@ -58,13 +62,7 @@ class RegistrationMobileNumber extends React.Component {
                 maxLength={10}></MobileInput>
             </InputGroup>
             <ButtonGroup>
-              {/* <LongButton title="Login" />
-            <LongButton title="Back" /> */}
-              <Button
-                color="#6739b7"
-                title="Login"
-                onPress={this.handleSendCode}
-              />
+              <LongButton title="Login" onPress={this.handleSendCode} />
             </ButtonGroup>
           </Frame>
         </Body>
