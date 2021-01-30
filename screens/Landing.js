@@ -22,6 +22,8 @@ import {out} from 'react-native/Libraries/Animated/src/Easing';
 import SolidButton from './SolidButton';
 import BorderButton from './BorderButton';
 
+import SettingsTab from './SettingsTab';
+
 const Tab = createBottomTabNavigator();
 
 const MapTab = ({navigation, route}) => {
@@ -135,56 +137,6 @@ const LogsTab = () => {
           time="4:22 PM"
           status={true}
           selected={true}
-        />
-        <LogItem
-          place="Hinckley & District Museum area"
-          time="4:22 PM"
-          status={false}
-        />
-        <LogItem
-          place="Hinckley & District Museum area"
-          time="4:22 PM"
-          status={false}
-        />
-        <LogItem
-          place="Hinckley & District Museum area"
-          time="4:22 PM"
-          status={false}
-        />
-        <LogItem
-          place="Hinckley & District Museum area"
-          time="4:22 PM"
-          status={false}
-        />
-        <LogItem
-          place="Hinckley & District Museum area"
-          time="4:22 PM"
-          status={false}
-        />
-        <LogItem
-          place="Hinckley & District Museum area"
-          time="4:22 PM"
-          status={false}
-        />
-        <LogItem
-          place="Hinckley & District Museum area"
-          time="4:22 PM"
-          status={false}
-        />
-        <LogItem
-          place="Hinckley & District Museum area"
-          time="4:22 PM"
-          status={false}
-        />
-        <LogItem
-          place="Hinckley & District Museum area"
-          time="4:22 PM"
-          status={false}
-        />
-        <LogItem
-          place="Hinckley & District Museum area"
-          time="4:22 PM"
-          status={false}
         />
         <LogItem
           place="Hinckley & District Museum area"
@@ -306,7 +258,7 @@ class Landing extends React.Component {
           <Tab.Screen name="Map" component={MapTab} />
           <Tab.Screen name="Logs" component={LogsTab} />
           <Tab.Screen name="Saviours" component={MapTab} />
-          <Tab.Screen name="Settings" component={MapTab} />
+          <Tab.Screen name="Settings" component={SettingsTab} />
         </Tab.Navigator>
         {this.state.showAlertBox ? (
           <>

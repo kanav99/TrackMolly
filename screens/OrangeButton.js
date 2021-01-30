@@ -6,12 +6,12 @@ import {
   TouchableHighlight,
 } from 'react-native';
 
-const OrangeButton = ({onPress, title}) => (
+const OrangeButton = ({onPress, title, style, color}) => (
   <TouchableOpacity
     activeOpacity={0.4}
     onPress={onPress}
-    style={styles.appButtonContainer}>
-    <Text style={styles.appButtonText}>{title}</Text>
+    style={[styles.appButtonContainer, style, {borderColor: color}]}>
+    <Text style={(styles.appButtonText, {color})}>{title}</Text>
   </TouchableOpacity>
 );
 
