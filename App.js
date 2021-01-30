@@ -30,6 +30,9 @@ import {createStackNavigator} from '@react-navigation/stack';
 import SplashScreen from './screens/SplashScreen';
 import RegistrationMobileNumber from './screens/RegistrationMobileNumber';
 import RegistrationOTP from './screens/RegistrationOTP';
+import RegistrationName from './screens/RegistrationName';
+import WelcomeBack from './screens/WelcomeBack';
+import Landing from './screens/Landing';
 
 const Stack = createStackNavigator();
 
@@ -50,13 +53,16 @@ const App = () => {
     <NavigationContainer>
       <Stack.Navigator
         screenOptions={{headerShown: false}}
-        initialRouteName="RegistrationMobileNumber">
+        initialRouteName="Landing">
         <Stack.Screen name="Splash" component={SplashScreen} />
         <Stack.Screen
           name="RegistrationMobileNumber"
           component={RegistrationMobileNumber}
         />
         <Stack.Screen name="RegistrationOTP" component={RegistrationOTP} />
+        <Stack.Screen name="RegistrationName" component={RegistrationName} />
+        <Stack.Screen name="WelcomeBack" component={WelcomeBack} />
+        <Stack.Screen name="Landing" component={Landing} />
       </Stack.Navigator>
     </NavigationContainer>
   );

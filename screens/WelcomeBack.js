@@ -1,47 +1,22 @@
 import React from 'react';
-import {
-  SafeAreaView,
-  View,
-  StyleSheet,
-  Text,
-  TextInput,
-  Button,
-} from 'react-native';
+import {SafeAreaView, View, StyleSheet, Text} from 'react-native';
 import Balls from './Balls';
 import styled from 'styled-components';
 import LongButton from './LongButton';
-import globalData from '../Globals';
 
-class RegistrationMobileNumber extends React.Component {
+class WelcomeBack extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      phone:
-        props.route.params.phone == undefined ? '' : props.route.params.phone,
-      otp: '',
+      name: props.route.params.name,
       navigation: props.navigation,
       route: props.route,
     };
-    this.confirmOTP = this.confirmOTP.bind(this);
+    this.goToLanding = this.goToLanding.bind(this);
   }
 
-  confirmOTP() {
-    globalData.otp
-      .confirm(this.state.otp)
-      .then((result) => {
-        if (result.additionalUserInfo.isNewUser) {
-          alert('Hello New User ' + result.user.uid);
-          this.state.navigation.navigate('RegistrationName');
-        } else {
-          this.state.navigation.navigate('WelcomeBack', {
-            name: result.user.displayName,
-          });
-        }
-      })
-      .catch((error) => {
-        alert(error.message);
-        console.log(error);
-      });
+  goToLanding() {
+    this.state.navigation.navigate('Landing');
   }
 
   render() {
@@ -49,25 +24,15 @@ class RegistrationMobileNumber extends React.Component {
       <SafeAreaView>
         <View>
           <Balls />
-          <Text style={styles.banner}>I just pinged you!</Text>
+          <Text style={styles.banner}>Welcome back!</Text>
           <View style={styles.frame}>
             <View style={styles.inner}>
-              <Text style={styles.text}>Enter OTP sent via SMS on</Text>
-              <Text style={styles.text}>📱 {this.state.phone}</Text>
-              <TextInput
-                style={styles.otpInput}
-                selectionColor="#6739b7"
-                keyboardType="number-pad"
-                value={this.state.otp}
-                onChangeText={(val) => {
-                  this.setState({
-                    otp: val,
-                  });
-                }}
-                maxLength={6}></TextInput>
+              <Text style={styles.text}>
+                Welcome back {this.state.name}, You are all set!
+              </Text>
             </View>
             <ButtonGroup>
-              <LongButton title="Verify" onPress={this.confirmOTP} />
+              <LongButton title="Continue" onPress={this.goToLanding} />
             </ButtonGroup>
           </View>
         </View>
@@ -79,7 +44,7 @@ class RegistrationMobileNumber extends React.Component {
 const styles = StyleSheet.create({
   banner: {
     position: 'absolute',
-    width: 190,
+    width: '100%',
     height: 33,
     left: 24,
     top: 74,
@@ -108,7 +73,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
   },
   inner: {
-    width: 195,
+    width: '100%',
     height: 148,
     top: 0,
     left: 0,
@@ -125,15 +90,14 @@ const styles = StyleSheet.create({
     color: '#6739B7',
     lineHeight: 30,
   },
-  otpInput: {
+  nameInput: {
     position: 'absolute',
     backgroundColor: '#eee',
     bottom: 0,
-    width: '90%',
+    width: '100%',
     fontWeight: '600',
     fontSize: 32,
     color: '#6739B7',
-    letterSpacing: 10,
   },
   verify: {
     right: 24,
@@ -152,4 +116,4 @@ const ButtonGroup = styled.View`
   margin: 0px;
 `;
 
-export default RegistrationMobileNumber;
+export default WelcomeBack;
