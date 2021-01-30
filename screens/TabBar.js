@@ -93,6 +93,7 @@ export function TabBar({
 
         return (
           <TouchableOpacity
+            key={'tab-item-' + index}
             accessibilityRole="button"
             accessibilityState={isFocused ? {selected: true} : {}}
             accessibilityLabel={options.tabBarAccessibilityLabel}

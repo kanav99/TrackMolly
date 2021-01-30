@@ -23,6 +23,7 @@ import SolidButton from './SolidButton';
 import BorderButton from './BorderButton';
 
 import SettingsTab from './SettingsTab';
+import SavioursTab from './SavioursTab';
 
 const Tab = createBottomTabNavigator();
 
@@ -114,7 +115,7 @@ const LogItem = ({place, time, status, selected}) => {
                 selectedStar={(rating) => {}}
               />
             </View>
-            <OrangeButton title="Delete Log" />
+            <OrangeButton title="Delete Log" color="#FF6D0A" />
           </View>
         ) : (
           <></>
@@ -148,6 +149,8 @@ const LogsTab = () => {
   );
 };
 
+const AlertView = () => {};
+
 class Landing extends React.Component {
   constructor(props) {
     super(props);
@@ -158,6 +161,7 @@ class Landing extends React.Component {
       fadeAnim: new Animated.Value(0.0),
       emergencyCounter: 4,
       alertButtonActive: false,
+      alertView: null,
     };
 
     this.fadeIn = this.fadeIn.bind(this);
@@ -165,6 +169,8 @@ class Landing extends React.Component {
     this.decrementCounter = this.decrementCounter.bind(this);
     this.resetCounter = this.resetCounter.bind(this);
     this.activateAlertButton = this.activateAlertButton.bind(this);
+    this.alarmView = this.alarmView.bind(this);
+    this.fadeInAlarm = this.fadeInAlarm.bind(this);
   }
 
   decrementCounter = () => {
@@ -199,18 +205,34 @@ class Landing extends React.Component {
     });
   };
 
-  fadeIn = () => {
-    this.setState({
-      showAlertBox: true,
-    });
+  fadeIn = (view = null, timer = false) => {
+    this.setState(
+      {
+        showAlertBox: true,
+        alertView: view,
+      },
+      () => {
+        Animated.timing(this.state.fadeAnim, {
+          toValue: 1.0,
+          duration: 200,
+          useNativeDriver: true,
+        }).start(() => {
+          if (timer) this.decrementCounter();
+        });
+      },
+    );
 
-    Animated.timing(this.state.fadeAnim, {
-      toValue: 1.0,
-      duration: 200,
-      useNativeDriver: true,
-    }).start(() => {
-      this.decrementCounter();
-    });
+    // Animated.timing(this.state.fadeAnim, {
+    //   toValue: 1.0,
+    //   duration: 200,
+    //   useNativeDriver: true,
+    // }).start(() => {
+    //   this.decrementCounter();
+    // });
+  };
+
+  fadeInAlarm = () => {
+    this.fadeIn(this.alarmView, true);
   };
 
   fadeOut = () => {
@@ -225,6 +247,60 @@ class Landing extends React.Component {
       });
       this.resetCounter();
     });
+  };
+
+  alarmView = () => {
+    return (
+      <>
+        <Text
+          style={{
+            color: '#6739B7',
+            textAlign: 'center',
+            fontSize: 16,
+            padding: 6,
+            fontWeight: '600',
+          }}>
+          Call for help
+        </Text>
+        <Text style={{fontSize: 14, color: '#6739B7', padding: 6}}>
+          You are about to send an{' '}
+          <Text style={{color: '#FF6D0A'}}>emergency</Text> alert to all your{' '}
+          <Text style={{color: '#FF6D0A'}}>saviours</Text>.
+        </Text>
+        {!this.state.alertButtonActive ? (
+          <View style={{flex: 1, alignItems: 'center'}}>
+            <Text style={{fontSize: 14, color: '#6739B7', padding: 6}}>
+              Please wait for
+            </Text>
+            <Text
+              style={{
+                fontSize: 20,
+                color: '#6739B7',
+                padding: 6,
+                fontWeight: 'bold',
+              }}>
+              {this.state.emergencyCounter}s
+            </Text>
+          </View>
+        ) : null}
+        {this.state.alertButtonActive && (
+          <SolidButton
+            title="Send Alert"
+            color={'#FF6D0A'}
+            activeButton={true}></SolidButton>
+        )}
+        {!this.state.alertButtonActive && (
+          <SolidButton
+            title="Send Alert"
+            color={'#FF6D0A'}
+            activeButton={false}></SolidButton>
+        )}
+        <BorderButton
+          title="Cancel"
+          color="#6739B7"
+          onPress={this.fadeOut}></BorderButton>
+      </>
+    );
   };
 
   render() {
@@ -250,14 +326,18 @@ class Landing extends React.Component {
         <Tab.Navigator
           tabBar={(props) => (
             <TabBar
-              fadeInFunc={this.fadeIn}
+              fadeInFunc={this.fadeInAlarm}
               fadeOutFunc={this.fadeOut}
               {...props}
             />
           )}>
           <Tab.Screen name="Map" component={MapTab} />
           <Tab.Screen name="Logs" component={LogsTab} />
-          <Tab.Screen name="Saviours" component={MapTab} />
+          <Tab.Screen
+            name="Saviours"
+            component={SavioursTab}
+            initialParams={{fadeIn: this.fadeIn, fadeOut: this.fadeOut}}
+          />
           <Tab.Screen name="Settings" component={SettingsTab} />
         </Tab.Navigator>
         {this.state.showAlertBox ? (
@@ -295,53 +375,7 @@ class Landing extends React.Component {
                   },
                 ],
               }}>
-              <Text
-                style={{
-                  color: '#6739B7',
-                  textAlign: 'center',
-                  fontSize: 16,
-                  padding: 6,
-                  fontWeight: '600',
-                }}>
-                Call for help
-              </Text>
-              <Text style={{fontSize: 14, color: '#6739B7', padding: 6}}>
-                You are about to send an{' '}
-                <Text style={{color: '#FF6D0A'}}>emergency</Text> alert to all
-                your <Text style={{color: '#FF6D0A'}}>saviours</Text>.
-              </Text>
-              {!this.state.alertButtonActive ? (
-                <View style={{flex: 1, alignItems: 'center'}}>
-                  <Text style={{fontSize: 14, color: '#6739B7', padding: 6}}>
-                    Please wait for
-                  </Text>
-                  <Text
-                    style={{
-                      fontSize: 20,
-                      color: '#6739B7',
-                      padding: 6,
-                      fontWeight: 'bold',
-                    }}>
-                    {this.state.emergencyCounter}s
-                  </Text>
-                </View>
-              ) : null}
-              {this.state.alertButtonActive && (
-                <SolidButton
-                  title="Send Alert"
-                  color={'#FF6D0A'}
-                  activeButton={true}></SolidButton>
-              )}
-              {!this.state.alertButtonActive && (
-                <SolidButton
-                  title="Send Alert"
-                  color={'#FF6D0A'}
-                  activeButton={false}></SolidButton>
-              )}
-              <BorderButton
-                title="Cancel"
-                color="#6739B7"
-                onPress={this.fadeOut}></BorderButton>
+              <this.state.alertView />
             </Animated.View>
           </>
         ) : null}

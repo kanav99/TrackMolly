@@ -11,7 +11,7 @@ const BorderButton = ({onPress, title, color}) => (
     activeOpacity={0.4}
     onPress={onPress}
     accessibilityRole="button"
-    style={[styles.appButtonContainer, {borderColor: '#6739B7'}]}>
+    style={[styles.appButtonContainer, {borderColor: color}]}>
     <Text style={[styles.appButtonText, {color: color}]}>{title}</Text>
   </TouchableOpacity>
 );
@@ -24,6 +24,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+    textAlign: 'center',
     borderRadius: 6,
     borderWidth: 2,
     height: 43,
