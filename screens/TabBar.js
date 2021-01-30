@@ -6,8 +6,11 @@ import {
   StyleSheet,
   Animated,
   Text,
+  Image,
 } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+
+var alertButton = require('./images/alertButton.png');
 
 const iconMap = (label) => {
   switch (label) {
@@ -32,7 +35,7 @@ export function TabBar({state, descriptors, navigation}) {
   }
 
   const totalWidth = Dimensions.get('window').width;
-  const tabWidth = totalWidth / state.routes.length;
+  const tabWidth = totalWidth / (state.routes.length + 1);
 
   const [translateValue] = useState(new Animated.Value(0));
 
@@ -100,6 +103,11 @@ export function TabBar({state, descriptors, navigation}) {
           </TouchableOpacity>
         );
       })}
+      <View style={[{width: tabWidth}, style.alarmContainer]}>
+        <TouchableOpacity>
+          <Image source={alertButton} style={style.alarmButton} />
+        </TouchableOpacity>
+      </View>
       <Animated.View
         style={[
           style.slider,
@@ -121,6 +129,7 @@ const style = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#6739B7',
     paddingTop: 10,
+    bottom: 0,
   },
   slider: {
     height: 2,
@@ -130,5 +139,12 @@ const style = StyleSheet.create({
     backgroundColor: '#03DAC5',
     borderRadius: 10,
     width: 90,
+  },
+  alarmContainer: {
+    backgroundColor: '#6739B7',
+    height: 70,
+  },
+  alarmButton: {
+    top: -38,
   },
 });
