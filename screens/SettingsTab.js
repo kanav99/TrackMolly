@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 
 import OrangeButton from './OrangeButton';
+import addUser from '../api/database-helper';
 
 const SettingsTab = () => {
   var [selection, setSelection] = useState(0);
@@ -26,6 +27,8 @@ const SettingsTab = () => {
         <TouchableNativeFeedback
           onPress={() => {
             setSelection(1);
+            console.log("hi mahak");
+            addUser('mahak', '9358232476');
           }}>
           <View
             style={[
