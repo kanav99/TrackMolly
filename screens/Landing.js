@@ -1,161 +1,17 @@
 import React from 'react';
-import {
-  SafeAreaView,
-  View,
-  StyleSheet,
-  Text,
-  TextInput,
-  ScrollView,
-  Button,
-  Animated,
-  Dimensions,
-} from 'react-native';
+import {View, StyleSheet, Text, Animated, Dimensions} from 'react-native';
 
-import MapView from 'react-native-maps';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {TabBar} from './TabBar';
-import OrangeButton from './OrangeButton';
-import StarRating from 'react-native-star-rating';
-import LongButton from './LongButton';
-import {out} from 'react-native/Libraries/Animated/src/Easing';
 import SolidButton from './SolidButton';
 import BorderButton from './BorderButton';
 
 import SettingsTab from './SettingsTab';
 import SavioursTab from './SavioursTab';
+import LogsTab from './LogsTab';
+import MapTab from './MapTab';
 
 const Tab = createBottomTabNavigator();
-
-const MapTab = ({navigation, route}) => {
-  return (
-    <SafeAreaView style={{flex: 1}}>
-      <MapView
-        style={{flex: 1}}
-        initialRegion={{
-          latitude: 37.78825,
-          longitude: -122.4324,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
-        }}
-      />
-      <View style={styles.topBar}>
-        <View style={styles.locationSummary}>
-          <MaterialIcons
-            name="place"
-            size={32}
-            style={{color: 'white', opacity: 0.6, top: 2}}
-          />
-          <View style={styles.locationText}>
-            <Text style={styles.text1}>Hinckley & District Museum area</Text>
-            <Text style={styles.text2}>Safety Rating: 4.2/5</Text>
-          </View>
-        </View>
-      </View>
-    </SafeAreaView>
-  );
-};
-
-const LogItem = ({place, time, status, selected}) => {
-  return (
-    <View
-      style={{
-        height: selected ? 127 : 42,
-        marginBottom: 16,
-        alignItems: 'center',
-        display: 'flex',
-        flexDirection: 'row',
-        marginLeft: 15,
-        marginRight: 15,
-        backgroundColor: selected ? '#FAFAFA' : '#FFFFFF',
-      }}>
-      <MaterialIcons
-        name="place"
-        size={32}
-        style={{color: 'rgba(0, 0, 0, 0.31);'}}
-      />
-      <View
-        style={{
-          paddingLeft: 10,
-        }}>
-        <Text
-          style={{
-            color: '#6739B7',
-            fontWeight: '600',
-            fontFamily: 'Open Sans',
-          }}>
-          {place}
-        </Text>
-        <Text
-          style={{color: 'rgba(103, 57, 183, 0.87)', fontFamily: 'Open Sans'}}>
-          {time} | Status: {status ? 'Active' : 'Inactive'}
-        </Text>
-        {selected ? (
-          <View
-            style={{
-              height: 53,
-              flexDirection: 'row',
-              display: 'flex',
-              alignItems: 'center',
-            }}>
-            <View
-              style={{
-                width: '50%',
-                alignItems: 'center',
-              }}>
-              <Text
-                style={{
-                  fontFamily: 'Open Sans',
-                  fontWeight: '600',
-                  fontSize: 14,
-                  color: '#6739B7',
-                }}>
-                Rate current area
-              </Text>
-              <StarRating
-                disabled={false}
-                maxStars={5}
-                rating={2}
-                starSize={18}
-                emptyStarColor="#6739B7"
-                fullStarColor="#6739B7"
-                starStyle={{marginRight: 5}}
-                selectedStar={(rating) => {}}
-              />
-            </View>
-            <OrangeButton title="Delete Log" color="#FF6D0A" />
-          </View>
-        ) : (
-          <></>
-        )}
-      </View>
-    </View>
-  );
-};
-
-const LogsTab = () => {
-  return (
-    <SafeAreaView style={{flex: 1, backgroundColor: '#FFFFFF'}}>
-      <Text style={styles.logsHeader1}>My location logs</Text>
-      <Text style={styles.logsHeader2}>
-        Press and hold any row for more options
-      </Text>
-      <ScrollView>
-        <LogItem
-          place="Hinckley & District Museum area"
-          time="4:22 PM"
-          status={true}
-          selected={true}
-        />
-        <LogItem
-          place="Hinckley & District Museum area"
-          time="4:22 PM"
-          status={false}
-        />
-      </ScrollView>
-    </SafeAreaView>
-  );
-};
 
 class Landing extends React.Component {
   constructor(props) {
@@ -357,7 +213,11 @@ class Landing extends React.Component {
             component={SavioursTab}
             initialParams={{fadeIn: this.fadeIn, fadeOut: this.fadeOut}}
           />
-          <Tab.Screen name="Settings" component={SettingsTab} />
+          <Tab.Screen
+            name="Settings"
+            component={SettingsTab}
+            initialParams={{navigation: this.state.navigation}}
+          />
         </Tab.Navigator>
         {this.state.showAlertBox ? (
           <>

@@ -30,7 +30,6 @@ class RegistrationMobileNumber extends React.Component {
       .confirm(this.state.otp)
       .then((result) => {
         if (result.additionalUserInfo.isNewUser) {
-          alert('Hello New User ' + result.user.uid);
           this.state.navigation.navigate('RegistrationName');
         } else {
           this.state.navigation.navigate('WelcomeBack', {

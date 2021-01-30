@@ -49,11 +49,13 @@ const ProfileScreen = ({navigation, route}) => {
 };
 
 const App = () => {
+  var initalScreen =
+    auth().currentUser == null ? 'RegistrationMobileNumber' : 'Landing';
   return (
     <NavigationContainer>
       <Stack.Navigator
         screenOptions={{headerShown: false}}
-        initialRouteName="Landing">
+        initialRouteName={initalScreen}>
         <Stack.Screen name="Splash" component={SplashScreen} />
         <Stack.Screen
           name="RegistrationMobileNumber"

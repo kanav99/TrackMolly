@@ -29,7 +29,10 @@ class RegistrationName extends React.Component {
     user.updateProfile({
       displayName: this.state.name,
     });
-    this.state.navigation.navigate('RegistrationSaviours');
+    // this.state.navigation.navigate('RegistrationSaviours');
+    this.state.navigation.reset({
+      routes: [{name: 'Landing'}],
+    });
   }
 
   render() {

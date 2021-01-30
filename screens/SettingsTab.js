@@ -11,7 +11,9 @@ import {
 
 import OrangeButton from './OrangeButton';
 
-const SettingsTab = () => {
+import auth from '@react-native-firebase/auth';
+
+const SettingsTab = ({route}) => {
   var [selection, setSelection] = useState(0);
   return (
     <View style={{flex: 1, backgroundColor: '#FFFFFF'}}>
@@ -246,6 +248,12 @@ const SettingsTab = () => {
         </TouchableNativeFeedback>
 
         <TouchableOpacity
+          onPress={() => {
+            auth().signOut();
+            route.params.navigation.reset({
+              routes: [{name: 'RegistrationMobileNumber'}],
+            });
+          }}
           style={[
             {
               height: 42,
