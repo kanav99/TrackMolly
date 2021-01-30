@@ -106,7 +106,9 @@ export function TabBar({
               size={32}
               style={{color: 'white'}}
             />
-            <Text style={{color: '#ffffff'}}>{label}</Text>
+            <Text style={{color: '#ffffff', fontFamily: 'Open Sans'}}>
+              {label}
+            </Text>
           </TouchableOpacity>
         );
       })}

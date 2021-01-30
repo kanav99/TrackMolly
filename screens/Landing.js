@@ -78,8 +78,16 @@ const LogItem = ({place, time, status, selected}) => {
         style={{
           paddingLeft: 10,
         }}>
-        <Text style={{color: '#6739B7', fontWeight: '600'}}>{place}</Text>
-        <Text style={{color: 'rgba(103, 57, 183, 0.87)'}}>
+        <Text
+          style={{
+            color: '#6739B7',
+            fontWeight: '600',
+            fontFamily: 'Open Sans',
+          }}>
+          {place}
+        </Text>
+        <Text
+          style={{color: 'rgba(103, 57, 183, 0.87)', fontFamily: 'Open Sans'}}>
           {time} | Status: {status ? 'Active' : 'Inactive'}
         </Text>
         {selected ? (
@@ -148,8 +156,6 @@ const LogsTab = () => {
     </SafeAreaView>
   );
 };
-
-const AlertView = () => {};
 
 class Landing extends React.Component {
   constructor(props) {
@@ -259,17 +265,30 @@ class Landing extends React.Component {
             fontSize: 16,
             padding: 6,
             fontWeight: '600',
+            fontFamily: 'Open Sans',
           }}>
           Call for help
         </Text>
-        <Text style={{fontSize: 14, color: '#6739B7', padding: 6}}>
+        <Text
+          style={{
+            fontSize: 14,
+            color: '#6739B7',
+            padding: 6,
+            fontFamily: 'Open Sans',
+          }}>
           You are about to send an{' '}
           <Text style={{color: '#FF6D0A'}}>emergency</Text> alert to all your{' '}
           <Text style={{color: '#FF6D0A'}}>saviours</Text>.
         </Text>
         {!this.state.alertButtonActive ? (
           <View style={{flex: 1, alignItems: 'center'}}>
-            <Text style={{fontSize: 14, color: '#6739B7', padding: 6}}>
+            <Text
+              style={{
+                fontSize: 14,
+                color: '#6739B7',
+                padding: 6,
+                fontFamily: 'Open Sans',
+              }}>
               Please wait for
             </Text>
             <Text
@@ -429,10 +448,9 @@ const styles = StyleSheet.create({
   },
   logsHeader2: {
     padding: 16,
-    fontFamily: 'Open Sans',
+    fontFamily: 'OpenSans-Italic',
     fontSize: 16,
     fontWeight: '600',
-    fontStyle: 'italic',
     textAlign: 'center',
     color: 'rgba(103, 57, 183, 0.6)',
   },

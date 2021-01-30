@@ -23,10 +23,17 @@ const AlertView = (fadeOut, onSuccess) => {
           fontSize: 16,
           padding: 6,
           fontWeight: '600',
+          fontFamily: 'Open Sans',
         }}>
         Remove Contact
       </Text>
-      <Text style={{fontSize: 14, color: '#6739B7', padding: 6}}>
+      <Text
+        style={{
+          fontSize: 14,
+          color: '#6739B7',
+          padding: 6,
+          fontFamily: 'Open Sans',
+        }}>
         Are you sure you wish to remove the following contact from your Saviours
         list?
       </Text>
@@ -229,9 +236,8 @@ const styles = StyleSheet.create({
   },
   helpText: {
     textAlign: 'center',
-    fontStyle: 'italic',
     fontSize: 15,
-    fontFamily: 'Open Sans',
+    fontFamily: 'OpenSans-Italic',
     color: 'rgba(103, 57, 183, 0.75)',
   },
   altText: {
@@ -251,7 +257,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#6739B7',
     fontWeight: '600',
-    fontFamily: 'Nunito',
+    fontFamily: 'Open Sans',
   },
 });
 
