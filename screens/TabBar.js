@@ -9,6 +9,7 @@ import {
   Image,
 } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import globalData from '../Globals';
 
 var alertButton = require('./images/alertButton.png');
 
@@ -27,13 +28,7 @@ const iconMap = (label) => {
   }
 };
 
-export function TabBar({
-  state,
-  descriptors,
-  navigation,
-  fadeInFunc,
-  fadeOutFunc,
-}) {
+export function TabBar({state, descriptors, navigation}) {
   const focusedOptions = descriptors[state.routes[state.index].key].options;
 
   if (focusedOptions.tabBarVisible === false) {
@@ -44,6 +39,8 @@ export function TabBar({
   const tabWidth = totalWidth / (state.routes.length + 1);
 
   const [translateValue] = useState(new Animated.Value(0));
+
+  const fadeInFunc = globalData.fadeInAlarm;
 
   const animateSlider = (index) => {
     Animated.spring(translateValue, {

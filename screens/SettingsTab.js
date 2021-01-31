@@ -103,6 +103,10 @@ const SettingsTab = ({route}) => {
                     title="Reset PIN"
                     style={{left: 50}}
                     color="#FF6D0A"
+                    onPress={() => {
+                      console.log('fuck');
+                      notify();
+                    }}
                   />
                 </View>
               </>
