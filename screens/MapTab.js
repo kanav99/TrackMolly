@@ -2,19 +2,12 @@ import React from 'react';
 import {SafeAreaView, View, StyleSheet, Text} from 'react-native';
 import MapView from 'react-native-maps';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import Location from './Location';
 
 const MapTab = ({navigation, route}) => {
   return (
     <SafeAreaView style={{flex: 1}}>
-      <MapView
-        style={{flex: 1}}
-        initialRegion={{
-          latitude: 37.78825,
-          longitude: -122.4324,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
-        }}
-      />
+      <Location />
       <View style={styles.topBar}>
         <View style={styles.locationSummary}>
           <MaterialIcons
