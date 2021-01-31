@@ -25,6 +25,7 @@ class SolidButton extends React.Component {
         onPress={this.state.onPress}
         accessibilityRole="button"
         style={[
+          this.props.style,
           styles.appButtonContainer,
           {
             backgroundColor: this.state.color,

@@ -40,13 +40,32 @@ class RegistrationSaviours extends React.Component {
     var contacts = this.state.contacts;
     for (var i = 0; i < contacts.length; ++i) {
       var c = contacts[i];
-      addSaviour(
-        auth().currentUser.uid,
-        c.givenName + ' ' + c.familyName,
-        c.phoneNumbers[0].number,
-      );
+      if (c.selected) {
+        addSaviour(
+          auth().currentUser.uid,
+          c.givenName + ' ' + c.familyName,
+          c.phoneNumbers[0].number,
+        );
+      }
     }
-    this.props.navigation.navigate('RegistrationPIN');
+    globalData.showQuickTip(
+      <>
+        <Text
+          style={{
+            fontSize: 14,
+            color: '#6739B7',
+            padding: 6,
+            fontFamily: 'Open Sans',
+          }}>
+          Pressing Power button <Text style={{color: '#FF6D0A'}}>5 times</Text>{' '}
+          in succession triggers an{' '}
+          <Text style={{color: '#FF6D0A'}}>emergency alert</Text>.
+        </Text>
+      </>,
+      () => {
+        this.props.navigation.navigate('RegistrationPIN');
+      },
+    );
   };
 
   onSkip = () => {

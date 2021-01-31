@@ -11,6 +11,8 @@ import SavioursTab from './SavioursTab';
 import LogsTab from './LogsTab';
 import MapTab from './MapTab';
 
+import globalData from '../Globals';
+
 const Tab = createBottomTabNavigator();
 
 class Landing extends React.Component {
@@ -33,6 +35,10 @@ class Landing extends React.Component {
     this.activateAlertButton = this.activateAlertButton.bind(this);
     this.alarmView = this.alarmView.bind(this);
     this.fadeInAlarm = this.fadeInAlarm.bind(this);
+
+    globalData.fadeIn = this.fadeIn;
+    globalData.fadeOut = this.fadeOut;
+    globalData.fadeInAlarm = this.fadeInAlarm;
   }
 
   decrementCounter = () => {
@@ -83,14 +89,6 @@ class Landing extends React.Component {
         });
       },
     );
-
-    // Animated.timing(this.state.fadeAnim, {
-    //   toValue: 1.0,
-    //   duration: 200,
-    //   useNativeDriver: true,
-    // }).start(() => {
-    //   this.decrementCounter();
-    // });
   };
 
   fadeInAlarm = () => {
@@ -180,39 +178,12 @@ class Landing extends React.Component {
 
   render() {
     const screenHeight = Dimensions.get('window').height;
-    console.log('landing ' + this.state.alertButtonActive);
-
-    if (this.state.alertButtonActive) {
-      var but = () => (
-        <SolidButton
-          title="Send Alert"
-          color={this.state.alertButtonActive ? 'black' : '#FF6D0A'}
-          activeButton={true}></SolidButton>
-      );
-    } else
-      var but = () => (
-        <SolidButton
-          title="Send Alert"
-          color={this.state.alertButtonActive ? 'black' : '#FF6D0A'}
-          activeButton={false}></SolidButton>
-      );
     return (
       <>
-        <Tab.Navigator
-          tabBar={(props) => (
-            <TabBar
-              fadeInFunc={this.fadeInAlarm}
-              fadeOutFunc={this.fadeOut}
-              {...props}
-            />
-          )}>
+        <Tab.Navigator tabBar={(props) => <TabBar {...props} />}>
           <Tab.Screen name="Map" component={MapTab} />
           <Tab.Screen name="Logs" component={LogsTab} />
-          <Tab.Screen
-            name="Saviours"
-            component={SavioursTab}
-            initialParams={{fadeIn: this.fadeIn, fadeOut: this.fadeOut}}
-          />
+          <Tab.Screen name="Saviours" component={SavioursTab} />
           <Tab.Screen
             name="Settings"
             component={SettingsTab}

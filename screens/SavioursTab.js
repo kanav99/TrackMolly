@@ -84,7 +84,6 @@ class SavioursTab extends React.Component {
     super(params);
     globalData.saviourTab = this;
     this.state = {
-      sheet: null,
       contacts: [],
       saviours: [],
       protectees: [],
@@ -139,48 +138,14 @@ class SavioursTab extends React.Component {
   }
 
   render() {
-    var route = this.props.route;
-    const {fadeIn, fadeOut} = route.params;
-    // const [sheet, setSheet] = useState(null);
-    var sheet = this.state.sheet;
-    // const [contacts, setContacts] = useState([]);
+    const {fadeIn, fadeOut} = globalData;
     var contacts = this.state.contacts;
-
-    // var [selection, setSelection] = useState(0);
     var selection = this.state.selection;
-    // const [translateValue] = useState(new Animated.Value(0.0));
-
-    // const [protectees] = useState([
-    //   {name: 'Saurabh Sangam', mobile: '+91 8702 694 200'},
-    // ]);
     var protectees = this.state.protectees;
 
-    // const [saviours] = useState([
-    //   {name: 'Shreyaa Sharma', mobile: '+91 9599346343'},
-    //   {name: 'Mahak Gupta', mobile: '+91 8702 694 200'},
-    // ]);
     var saviours = this.state.saviours;
     var target = selection == 0 ? saviours : protectees;
     var layer = this.state.layer;
-
-    // var sav = globalData.saviours;
-    // const [saviours] = useState([]);
-
-    // var prot = globalData.protectees;
-    // const [protectees] = useState([]);
-    // const [layer, setLayer] = useState(false);
-
-    // const animateSlider = (index) => {
-    //   Animated.spring(translateValue, {
-    //     toValue: (index + 1) * tabWidth,
-    //     velocity: 10,
-    //     useNativeDriver: true,
-    //   }).start();
-    // };
-
-    //   useEffect(() => {
-    //     animateSlider(selection);
-    //   }, [selection]);
 
     return (
       <>
@@ -432,12 +397,14 @@ class SavioursTab extends React.Component {
               onPress={() => {
                 for (var i = 0; i < contacts.length; ++i) {
                   var c = contacts[i];
-                  addSaviour(
-                    auth().currentUser.uid,
-                    c.givenName + ' ' + c.familyName,
-                    c.phoneNumbers[0].number,
-                  );
-                  contacts[i].selected = false;
+                  if (c.selected) {
+                    addSaviour(
+                      auth().currentUser.uid,
+                      c.givenName + ' ' + c.familyName,
+                      c.phoneNumbers[0].number,
+                    );
+                    contacts[i].selected = false;
+                  }
                 }
                 getSaviours(auth().currentUser.uid, (savs) => {
                   this.setState(
