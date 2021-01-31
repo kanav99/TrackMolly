@@ -3,6 +3,7 @@ import {SafeAreaView, View, StyleSheet, Text} from 'react-native';
 import Balls from './Balls';
 import styled from 'styled-components';
 import LongButton from './LongButton';
+import {NavigationActions} from '@react-navigation/stack';
 
 class WelcomeBack extends React.Component {
   constructor(props) {
@@ -16,7 +17,9 @@ class WelcomeBack extends React.Component {
   }
 
   goToLanding() {
-    this.state.navigation.navigate('Landing');
+    this.state.navigation.reset({
+      routes: [{name: 'Landing'}],
+    });
   }
 
   render() {

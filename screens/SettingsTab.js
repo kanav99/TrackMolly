@@ -12,7 +12,9 @@ import {
 import OrangeButton from './OrangeButton';
 import addUser from '../api/database-helper';
 
-const SettingsTab = () => {
+import auth from '@react-native-firebase/auth';
+
+const SettingsTab = ({route}) => {
   var [selection, setSelection] = useState(0);
   return (
     <View style={{flex: 1, backgroundColor: '#FFFFFF'}}>
@@ -39,10 +41,20 @@ const SettingsTab = () => {
               style={{flexDirection: 'row', height: 32, alignItems: 'center'}}>
               <Image source={require('./images/pin.png')} />
               <View style={{marginLeft: 16}}>
-                <Text style={{fontSize: 16, color: '#6739B7'}}>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    color: '#6739B7',
+                    fontFamily: 'Open Sans',
+                  }}>
                   Set / Change Security PIN
                 </Text>
-                <Text style={{fontSize: 16, color: 'rgba(103, 57, 183, 0.87)'}}>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    color: 'rgba(103, 57, 183, 0.87)',
+                    fontFamily: 'Open Sans',
+                  }}>
                   3 digit Security PIN is set
                 </Text>
               </View>
@@ -57,6 +69,7 @@ const SettingsTab = () => {
                     marginTop: 20,
                     color: '#6739B7',
                     fontWeight: '600',
+                    fontFamily: 'Open Sans',
                   }}>
                   Entering the PIN{' '}
                   <Text style={{color: '#FF6D0A'}}>backwards</Text> would send
@@ -71,6 +84,7 @@ const SettingsTab = () => {
                     marginTop: 20,
                     color: '#6739B7',
                     fontWeight: '600',
+                    fontFamily: 'Open Sans',
                   }}>
                   For e.g. If your PIN is{' '}
                   <Text style={{color: '#FF6D0A'}}>123</Text> , entering{' '}
@@ -111,10 +125,20 @@ const SettingsTab = () => {
               style={{flexDirection: 'row', height: 32, alignItems: 'center'}}>
               <Image source={require('./images/power.png')} />
               <View style={{marginLeft: 16}}>
-                <Text style={{fontSize: 16, color: '#6739B7'}}>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    color: '#6739B7',
+                    fontFamily: 'Open Sans',
+                  }}>
                   Power Button Alert Trigger
                 </Text>
-                <Text style={{fontSize: 16, color: 'rgba(103, 57, 183, 0.87)'}}>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    color: 'rgba(103, 57, 183, 0.87)',
+                    fontFamily: 'Open Sans',
+                  }}>
                   Enabled
                 </Text>
               </View>
@@ -129,6 +153,7 @@ const SettingsTab = () => {
                     marginTop: 20,
                     color: '#6739B7',
                     fontWeight: '600',
+                    fontFamily: 'Open Sans',
                   }}>
                   Pressing power button{' '}
                   <Text style={{color: '#FF6D0A'}}>5 times</Text> in succession
@@ -162,10 +187,20 @@ const SettingsTab = () => {
               style={{flexDirection: 'row', height: 32, alignItems: 'center'}}>
               <Image source={require('./images/notrack.png')} />
               <View style={{marginLeft: 16}}>
-                <Text style={{fontSize: 16, color: '#6739B7'}}>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    color: '#6739B7',
+                    fontFamily: 'Open Sans',
+                  }}>
                   Temporarily Disable Tracking
                 </Text>
-                <Text style={{fontSize: 16, color: 'rgba(103, 57, 183, 0.87)'}}>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    color: 'rgba(103, 57, 183, 0.87)',
+                    fontFamily: 'Open Sans',
+                  }}>
                   Tracking is Enabled
                 </Text>
               </View>
@@ -180,6 +215,7 @@ const SettingsTab = () => {
                     marginTop: 20,
                     color: '#6739B7',
                     fontWeight: '600',
+                    fontFamily: 'Open Sans',
                   }}>
                   You may disable tracking. I won't log your{' '}
                   <Text style={{color: '#FF6D0A'}}>location</Text> and{' '}
@@ -194,6 +230,7 @@ const SettingsTab = () => {
                     marginTop: 20,
                     color: '#6739B7',
                     fontWeight: '600',
+                    fontFamily: 'Open Sans',
                   }}>
                   Tracking would automatically be Enabled after{' '}
                   <Text style={{color: '#FF6D0A'}}>6 hours</Text>. emergency
@@ -214,6 +251,12 @@ const SettingsTab = () => {
         </TouchableNativeFeedback>
 
         <TouchableOpacity
+          onPress={() => {
+            auth().signOut();
+            route.params.navigation.reset({
+              routes: [{name: 'RegistrationMobileNumber'}],
+            });
+          }}
           style={[
             {
               height: 42,
@@ -248,7 +291,7 @@ const SettingsTab = () => {
 
 const styles = StyleSheet.create({
   settings: {
-    height: 50,
+    height: 65,
     marginBottom: 20,
     paddingLeft: 16,
     paddingRight: 16,

@@ -93,6 +93,7 @@ export function TabBar({
 
         return (
           <TouchableOpacity
+            key={'tab-item-' + index}
             accessibilityRole="button"
             accessibilityState={isFocused ? {selected: true} : {}}
             accessibilityLabel={options.tabBarAccessibilityLabel}
@@ -105,7 +106,9 @@ export function TabBar({
               size={32}
               style={{color: 'white'}}
             />
-            <Text style={{color: '#ffffff'}}>{label}</Text>
+            <Text style={{color: '#ffffff', fontFamily: 'Open Sans'}}>
+              {label}
+            </Text>
           </TouchableOpacity>
         );
       })}
