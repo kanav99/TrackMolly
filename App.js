@@ -7,7 +7,7 @@
  */
 
 import 'react-native-gesture-handler';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -16,6 +16,7 @@ import {
   Text,
   StatusBar,
   Button,
+  Alert,
 } from 'react-native';
 
 import globalData from './Globals';
@@ -24,6 +25,7 @@ import Geolocation from 'react-native-geolocation-service';
 import firebase from '@react-native-firebase/app';
 import auth from '@react-native-firebase/auth';
 import PhoneAuthScreen from './PhoneAuthScreen';
+import messaging from '@react-native-firebase/messaging';
 
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
@@ -49,6 +51,33 @@ const ProfileScreen = ({navigation, route}) => {
 };
 
 const App = () => {
+  useEffect(() => {
+    this.checkPermission();
+    const unsubscribe = messaging().onMessage(async remoteMessage => {
+      Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
+    });
+    return unsubscribe;
+  }, []);
+  checkPermission = async () => {
+    const enabled = await firebase.messaging().hasPermission();
+    if (enabled) {
+        this.getToken();
+    } else {
+        //this.requestPermission();
+    }
+  }
+  getToken = async () => {
+    // let fcmToken = await AsyncStorage.getItem('fcmToken');
+    // console.log(fcmToken);
+    //if (!fcmToken) {
+        var fcmToken = await firebase.messaging().getToken();
+        if (fcmToken) {
+            // user has a device token
+            console.log(fcmToken);
+            //await AsyncStorage.setItem('fcmToken', fcmToken);
+        }
+    //}
+  }
   var initalScreen =
     auth().currentUser == null ? 'RegistrationMobileNumber' : 'Landing';
   return (
