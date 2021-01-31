@@ -19,45 +19,45 @@ class Location extends React.Component {
     this.state = {
       location: null,
     };
-    this.startTracking = this.startTracking.bind(this);
-    this.stopTracking = this.stopTracking.bind(this);
-    // this.requestPermission = this.requestPermission.bind(this);
+    // this.startTracking = this.startTracking.bind(this);
+    // this.stopTracking = this.stopTracking.bind(this);
+    // // this.requestPermission = this.requestPermission.bind(this);
 
-    RNLocation.configure({
-      // distanceFilter: null, // Meters
-      desiredAccuracy: {
-        ios: 'best',
-        android: 'balancedPowerAccuracy',
-      },
-      // Android only
-      androidProvider: 'auto',
-      // interval: 300000, // 5 min
-      // fastestInterval: 600000, // Milliseconds
-      // maxWaitTime: 600000, // Milliseconds
-      // iOS Only
-      activityType: 'other',
-      allowsBackgroundLocationUpdates: true,
-      headingOrientation: 'portrait',
-      pausesLocationUpdatesAutomatically: false,
-      showsBackgroundLocationIndicator: false,
-    });
+    // RNLocation.configure({
+    //   // distanceFilter: null, // Meters
+    //   desiredAccuracy: {
+    //     ios: 'best',
+    //     android: 'balancedPowerAccuracy',
+    //   },
+    //   // Android only
+    //   androidProvider: 'auto',
+    //   // interval: 300000, // 5 min
+    //   // fastestInterval: 600000, // Milliseconds
+    //   // maxWaitTime: 600000, // Milliseconds
+    //   // iOS Only
+    //   activityType: 'other',
+    //   allowsBackgroundLocationUpdates: true,
+    //   headingOrientation: 'portrait',
+    //   pausesLocationUpdatesAutomatically: false,
+    //   showsBackgroundLocationIndicator: false,
+    // });
   }
 
-  componentDidMount() {
-    PermissionsAndroid.requestMultiple(
-      [
-        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-        PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION,
-      ],
-      {
-        title: 'Location',
-        message: 'This app would like to view your Location.',
-        buttonPositive: 'Please accept bare mortal',
-      },
-    ).then(() => {
-      this.startTracking();
-    });
-  }
+  // componentDidMount() {
+  //   PermissionsAndroid.requestMultiple(
+  //     [
+  //       PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+  //       PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION,
+  //     ],
+  //     {
+  //       title: 'Location',
+  //       message: 'This app would like to view your Location.',
+  //       buttonPositive: 'Please accept bare mortal',
+  //     },
+  //   ).then(() => {
+  //     this.startTracking();
+  //   });
+  // }
 
   // requestPermission = () => {
   //   RNLocation.requestPermission({
@@ -95,16 +95,17 @@ class Location extends React.Component {
   render() {
     const {location} = this.state;
     const {logs} = this.props;
+    console.log(logs);
     return (
-      location && (
+      logs && (
         <MapView
           zoomEnabled={false}
           rotateEnabled={false}
           scrollEnabled={false}
           style={{flex: 1}}
           region={{
-            latitude: logs[logs.length - 1].latitude,
-            longitude: logs[logs.length - 1].longitude,
+            latitude: logs[logs.length - 1].latitude ? logs[logs.length - 1].latitude : 0,
+            longitude: logs[logs.length - 1].longitude ? logs[logs.length - 1].longitude : 0,
             latitudeDelta: 0.0461,
             longitudeDelta: 0.021,
           }}>
