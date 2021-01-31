@@ -10,7 +10,6 @@ import {
 } from 'react-native';
 
 import OrangeButton from './OrangeButton';
-import addUser from '../api/database-helper';
 
 import auth from '@react-native-firebase/auth';
 
@@ -29,8 +28,6 @@ const SettingsTab = ({route}) => {
         <TouchableNativeFeedback
           onPress={() => {
             setSelection(1);
-            console.log("hi mahak");
-            addUser('mahak', '9358232476');
           }}>
           <View
             style={[
