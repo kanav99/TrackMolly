@@ -26,6 +26,29 @@ class Landing extends React.Component {
       emergencyCounter: 4,
       alertButtonActive: false,
       alertView: null,
+      logs: [
+        {
+          location: 'Hinckley & District Museum area 1',
+          time: '4:22 PM',
+          status: true,
+          latitude: 28.7041,
+          longitude: 77.1,
+        },
+        {
+          location: 'Hinckley & District Museum area 2',
+          time: '4:22 PM',
+          status: false,
+          latitude: 28.7041,
+          longitude: 77.102,
+        },
+        {
+          location: 'Hinckley & District Museum area 2',
+          time: '4:22 PM',
+          status: false,
+          latitude: 28.7041,
+          longitude: 77.108,
+        },
+      ],
     };
 
     this.fadeIn = this.fadeIn.bind(this);
@@ -35,11 +58,37 @@ class Landing extends React.Component {
     this.activateAlertButton = this.activateAlertButton.bind(this);
     this.alarmView = this.alarmView.bind(this);
     this.fadeInAlarm = this.fadeInAlarm.bind(this);
+    this.pushLog = this.pushLog.bind(this);
 
     globalData.fadeIn = this.fadeIn;
     globalData.fadeOut = this.fadeOut;
     globalData.fadeInAlarm = this.fadeInAlarm;
   }
+
+  componentDidMount() {
+    // DEBUGGING!!
+    setInterval(() => {
+      console.log('yo');
+      const {logs} = this.state;
+      const ll = logs[logs.length - 1];
+      this.pushLog({
+        location: 'Hinckley & District Museum area 2',
+        time: '4:22 PM',
+        status: false,
+        longitude: ll.longitude + Math.random() * 0.002,
+        latitude: ll.latitude + Math.random() * 0.002,
+      });
+    }, 300000);
+  }
+
+  pushLog = (log) => {
+    console.log('ho');
+    const logs = this.state.logs;
+    logs.push(log);
+    this.setState({
+      logs,
+    });
+  };
 
   decrementCounter = () => {
     if (this.state.emergencyCounter > 1) {
@@ -181,8 +230,27 @@ class Landing extends React.Component {
     return (
       <>
         <Tab.Navigator tabBar={(props) => <TabBar {...props} />}>
-          <Tab.Screen name="Map" component={MapTab} />
-          <Tab.Screen name="Logs" component={LogsTab} />
+          <Tab.Screen
+            name="Map"
+            component={(props) => (
+              <MapTab
+                {...props}
+                logs={this.state.logs}
+                pushLog={this.pushLog}
+              />
+            )}
+          />
+          <Tab.Screen
+            name="Logs"
+            component={(props) => (
+              <LogsTab
+                {...props}
+                logs={this.state.logs}
+                pushLog={this.pushLog}
+              />
+            )}
+            initialParams={{logs: this.state.logs, pushLog: this.pushLog}}
+          />
           <Tab.Screen name="Saviours" component={SavioursTab} />
           <Tab.Screen
             name="Settings"

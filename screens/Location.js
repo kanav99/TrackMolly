@@ -11,32 +11,17 @@ import {
   PermissionsAndroid,
 } from 'react-native';
 import MapView, {Marker} from 'react-native-maps';
+import globalData from '../Globals';
 
 class Location extends React.Component {
   constructor() {
     super();
     this.state = {
       location: null,
-      logs: [
-        {
-          location: 'Hinckley & District Museum area 1',
-          time: '4:22 PM',
-          status: true,
-          latitude: 28.7041,
-          longitude: 77.1,
-        },
-        {
-          location: 'Hinckley & District Museum area 2',
-          time: '4:22 PM',
-          status: false,
-          latitude: 28.7041,
-          longitude: 77.102,
-        },
-      ],
     };
     this.startTracking = this.startTracking.bind(this);
     this.stopTracking = this.stopTracking.bind(this);
-    this.requestPermission = this.requestPermission.bind(this);
+    // this.requestPermission = this.requestPermission.bind(this);
 
     RNLocation.configure({
       // distanceFilter: null, // Meters
@@ -74,24 +59,24 @@ class Location extends React.Component {
     });
   }
 
-  requestPermission = () => {
-    RNLocation.requestPermission({
-      ios: 'always',
-      android: {
-        detail: 'fine', // or 'coarse'
-        rationale: {
-          title: 'We need to access your location',
-          message: 'We use your location to ensure your safety',
-          buttonPositive: 'OK',
-          buttonNegative: 'Cancel',
-        },
-      },
-    }).then((granted) => {
-      if (granted) {
-        this.startTracking();
-      }
-    });
-  };
+  // requestPermission = () => {
+  //   RNLocation.requestPermission({
+  //     ios: 'always',
+  //     android: {
+  //       detail: 'fine', // or 'coarse'
+  //       rationale: {
+  //         title: 'We need to access your location',
+  //         message: 'We use your location to ensure your safety',
+  //         buttonPositive: 'OK',
+  //         buttonNegative: 'Cancel',
+  //       },
+  //     },
+  //   }).then((granted) => {
+  //     if (granted) {
+  //       this.startTracking();
+  //     }
+  //   });
+  // };
 
   startTracking = () => {
     this.locationSubscription = RNLocation.subscribeToLocationUpdates(
@@ -108,16 +93,20 @@ class Location extends React.Component {
   };
 
   render() {
-    const {location, logs} = this.state;
+    const {location} = this.state;
+    const {logs} = this.props;
     return (
       location && (
         <MapView
+          zoomEnabled={false}
+          rotateEnabled={false}
+          scrollEnabled={false}
           style={{flex: 1}}
-          initialRegion={{
-            latitude: 28.7041,
-            longitude: 77.1025,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
+          region={{
+            latitude: logs[logs.length - 1].latitude,
+            longitude: logs[logs.length - 1].longitude,
+            latitudeDelta: 0.0461,
+            longitudeDelta: 0.021,
           }}>
           {logs.map((m, i) => (
             <Marker

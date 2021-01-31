@@ -16,6 +16,7 @@ import {
   addLocation,
   getLogs,
 } from '../api/database-helper';
+import globalData from '../Globals';
 
 const LogItem = ({place, time, status, selected, onDelete}) => {
   return (
@@ -104,39 +105,27 @@ class LogsTab extends React.Component {
     super(props);
     this.state = {
       selected: -1,
-      logs: [
-        {
-          location: 'Hinckley & District Museum area 1',
-          time: '4:22 PM',
-          status: true,
-        },
-        {
-          location: 'Hinckley & District Museum area 2',
-          time: '4:22 PM',
-          status: false,
-        },
-      ],
     };
     // TODO: Populate from firebase
     this.deleteLog = this.deleteLog.bind(this);
   }
 
   componentDidMount() {
-    var user = auth().currentUser;
-    getLogs(user.uid, (logs) => {
-      this.setState({
-        logs: fix(logs),
-      });
-    });
+    // var user = auth().currentUser;
+    // getLogs(user.uid, (logs) => {
+    //   this.setState({
+    //     logs: fix(logs),
+    //   });
+    // });
   }
 
   deleteLog = (i) => {
-    var updatedLogs = this.state.logs;
-    updatedLogs.splice(i, 1);
-    this.setState({
-      logs: updatedLogs,
-      selected: -1,
-    });
+    // var updatedLogs = this.state.logs;
+    // updatedLogs.splice(i, 1);
+    // this.setState({
+    //   logs: updatedLogs,
+    //   selected: -1,
+    // });
   };
 
   render() {
@@ -147,7 +136,7 @@ class LogsTab extends React.Component {
           Press and hold any row for more options
         </Text>
         <ScrollView>
-          {this.state.logs.map((x, i) => {
+          {this.props.logs.map((x, i) => {
             if (i == this.state.selected) {
               return (
                 <LogItem

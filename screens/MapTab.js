@@ -10,27 +10,27 @@ import {useState} from 'react/cjs/react.development';
 import {getRating} from '../api/database-helper';
 Geocoder.init(API_KEY);
 
-const MapTab = ({navigation, route}) => {
-  const [locationName, setLocationName] = useState(
-    'Hinckley & District Museum area',
-  );
-  const [rating, setRating] = useState(4.2);
+const MapTab = ({navigation, route, screenProps, logs, pushLog}) => {
+  // const [locationName, setLocationName] = useState(
+  //   'Hinckley & District Museum area',
+  // );
+  // const [rating, setRating] = useState(4.2);
 
-  Geocoder.from(37.78825, -122.4325).then((json) => {
-    // console.log(JSON.stringify(json, null, 2));
-    console.log(json.results[0].place_id);
-    console.log(json.results[0].formatted_address);
-    console.log(json.plus_code.global_code);
-    var addressComponent = json.results[0].address_components[0];
-    console.log(addressComponent);
-  });
-  getRating(37.78825, -122.432, (r) => {
-    console.log(r);
-  });
+  // Geocoder.from(37.78825, -122.4325).then((json) => {
+  //   // console.log(JSON.stringify(json, null, 2));
+  //   console.log(json.results[0].place_id);
+  //   console.log(json.results[0].formatted_address);
+  //   console.log(json.plus_code.global_code);
+  //   var addressComponent = json.results[0].address_components[0];
+  //   console.log(addressComponent);
+  // });
+  // getRating(37.78825, -122.432, (r) => {
+  //   console.log(r);
+  // });
 
   return (
     <SafeAreaView style={{flex: 1}}>
-      <Location />
+      <Location logs={logs} pushLog={pushLog} />
       <View style={styles.topBar}>
         <View style={styles.locationSummary}>
           <MaterialIcons
