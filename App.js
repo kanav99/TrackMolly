@@ -7,7 +7,7 @@
  */
 
 import 'react-native-gesture-handler';
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -16,6 +16,7 @@ import {
   Text,
   StatusBar,
   Button,
+  Alert,
   Animated,
   Dimensions,
 } from 'react-native';
@@ -25,6 +26,7 @@ import globalData from './Globals';
 import Geolocation from 'react-native-geolocation-service';
 import firebase from '@react-native-firebase/app';
 import auth from '@react-native-firebase/auth';
+import messaging from '@react-native-firebase/messaging';
 
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
@@ -59,6 +61,15 @@ class App extends React.Component {
     this.showQuickTip = this.showQuickTip.bind(this);
     globalData.showQuickTip = this.showQuickTip;
     this.closeQuickTip = this.closeQuickTip.bind(this);
+  }
+
+  componentDidMount() {
+    const unsubscribe = messaging().onMessage(async (remoteMessage) => {
+      Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
+    });
+    return unsubscribe;
+    //       return unsubscribe;
+  }, []);
   }
 
   showQuickTip = (view, cb) => {
@@ -188,5 +199,6 @@ class App extends React.Component {
 }
 
 const styles = StyleSheet.create({});
+>>>>>>> fmain
 
 export default App;
