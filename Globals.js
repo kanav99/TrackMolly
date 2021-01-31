@@ -1,4 +1,6 @@
 var globalData = {
+  name: '',
+  phone: '',
   pin: '123',
   logs: [
     {
@@ -18,6 +20,7 @@ var globalData = {
   protectees: [],
   powerButtonAlert: true,
   tracking: true,
+  saviourTab: null,
 };
 
 export default globalData;

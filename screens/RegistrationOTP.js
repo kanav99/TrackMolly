@@ -16,23 +16,20 @@ class RegistrationMobileNumber extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      phone:
-        props.route.params.phone == undefined ? '' : props.route.params.phone,
       otp: '',
-      navigation: props.navigation,
-      route: props.route,
     };
     this.confirmOTP = this.confirmOTP.bind(this);
   }
 
-  confirmOTP() {
+  confirmOTP = () => {
     globalData.otp
       .confirm(this.state.otp)
       .then((result) => {
         if (result.additionalUserInfo.isNewUser) {
-          this.state.navigation.navigate('RegistrationName');
+          this.props.navigation.navigate('RegistrationName');
         } else {
-          this.state.navigation.navigate('WelcomeBack', {
+          globalData.name = result.user.displayName;
+          this.props.navigation.navigate('WelcomeBack', {
             name: result.user.displayName,
           });
         }
@@ -41,7 +38,7 @@ class RegistrationMobileNumber extends React.Component {
         alert(error.message);
         console.log(error);
       });
-  }
+  };
 
   render() {
     return (
@@ -52,7 +49,9 @@ class RegistrationMobileNumber extends React.Component {
           <View style={styles.frame}>
             <View style={styles.inner}>
               <Text style={styles.text}>Enter OTP sent via SMS on</Text>
-              <Text style={styles.text}>📱 {this.state.phone}</Text>
+              <Text style={styles.text}>
+                📱 {this.props.route.params.phone}
+              </Text>
               <TextInput
                 style={styles.otpInput}
                 selectionColor="#6739b7"

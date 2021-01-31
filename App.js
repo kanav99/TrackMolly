@@ -34,24 +34,18 @@ import WelcomeBack from './screens/WelcomeBack';
 import Landing from './screens/Landing';
 import RegistrationSaviours from './screens/RegistrationSaviours';
 import RegistrationPIN from './screens/RegistrationPIN';
+import {
+  addProtectee,
+  addSaviour,
+  getProtectees,
+  getSaviours,
+} from './api/database-helper';
 
 const Stack = createStackNavigator();
 
-const HomeScreen = ({navigation}) => {
-  return (
-    <Button
-      title="Go to Jane's profile"
-      onPress={() => navigation.navigate('Profile', {name: 'Jane'})}
-    />
-  );
-};
-const ProfileScreen = ({navigation, route}) => {
-  return <Text>This is {route.params.name}'s profile</Text>;
-};
-
 const App = () => {
-  var initalScreen =
-    auth().currentUser == null ? 'RegistrationMobileNumber' : 'Landing';
+  var user = auth().currentUser;
+  var initalScreen = user == null ? 'RegistrationMobileNumber' : 'Landing';
   return (
     <NavigationContainer>
       <Stack.Navigator

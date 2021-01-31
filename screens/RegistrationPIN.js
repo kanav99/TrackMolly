@@ -10,22 +10,20 @@ import {
 import Balls from './Balls';
 import styled from 'styled-components';
 import LongButton from './LongButton';
-import globalData from '../Globals';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 class RegistrationPIN extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       pin: '',
-      navigation: props.navigation,
-      route: props.route,
     };
     this.confirmPIN = this.confirmPIN.bind(this);
   }
 
-  confirmPIN = () => {
-    globalData.pin = this.state.pin;
-    this.state.navigation.reset({
+  confirmPIN = async () => {
+    await AsyncStorage.setItem('@pin', this.state.pin);
+    this.props.navigation.reset({
       routes: [{name: 'Landing'}],
     });
   };

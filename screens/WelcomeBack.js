@@ -17,9 +17,7 @@ class WelcomeBack extends React.Component {
   }
 
   goToLanding() {
-    this.state.navigation.reset({
-      routes: [{name: 'Landing'}],
-    });
+    this.props.navigation.navigate('RegistrationPIN');
   }
 
   render() {

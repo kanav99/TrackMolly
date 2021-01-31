@@ -20,6 +20,7 @@ import SolidButton from './SolidButton';
 import {PermissionsAndroid} from 'react-native';
 import Contacts from 'react-native-contacts';
 import RBSheet from 'react-native-raw-bottom-sheet';
+import {addSaviour} from '../api/database-helper';
 
 const totalHeight = Dimensions.get('window').height;
 
@@ -36,6 +37,15 @@ class RegistrationSaviours extends React.Component {
   }
 
   onConfirm = () => {
+    var contacts = this.state.contacts;
+    for (var i = 0; i < contacts.length; ++i) {
+      var c = contacts[i];
+      addSaviour(
+        auth().currentUser.uid,
+        c.givenName + ' ' + c.familyName,
+        c.phoneNumbers[0].number,
+      );
+    }
     this.props.navigation.navigate('RegistrationPIN');
   };
 
@@ -56,44 +66,44 @@ class RegistrationSaviours extends React.Component {
             </Text>
           </View>
           <ScrollView style={{width: '100%', height: 300}}>
-            {[
-              {name: 'Kanav', contact: '1234'},
-              {name: 'Kanav', contact: '1234'},
-              {name: 'Kanav', contact: '1234'},
-              {name: 'Kanav', contact: '1234'},
-              {name: 'Kanav', contact: '1234'},
-            ].map((x, i) => (
-              <View style={{height: 62}} key={'contact-' + i}>
-                <View style={{flexDirection: 'row'}}>
-                  <View
-                    style={{
-                      width: 50,
-                      height: 50,
-                      backgroundColor: '#F6F3FB',
-                      borderRadius: 50,
-                    }}>
-                    <Text style={styles.nameIconText}>{x.name[0]}</Text>
+            {this.state.contacts.map((x, i) =>
+              x.selected ? (
+                <View style={{height: 62}} key={'contact-' + i}>
+                  <View style={{flexDirection: 'row'}}>
+                    <View
+                      style={{
+                        width: 50,
+                        height: 50,
+                        backgroundColor: '#F6F3FB',
+                        borderRadius: 50,
+                      }}>
+                      <Text style={styles.nameIconText}>{x.givenName[0]}</Text>
+                    </View>
+                    <View style={{marginLeft: 16, flex: 1}}>
+                      <Text style={styles.contactName}>
+                        {x.givenName + ' ' + x.familyName}
+                      </Text>
+                      <Text style={styles.contactName}>
+                        {x.phoneNumbers[0].number}
+                      </Text>
+                    </View>
+                    <TouchableNativeFeedback
+                      onPress={() => {
+                        fadeIn(() =>
+                          AlertView(fadeOut, () => {
+                            console.log('remove saviour');
+                            fadeOut();
+                          }),
+                        );
+                      }}>
+                      <Image
+                        source={require('./images/remove.png')}
+                        style={{marginTop: 15}}></Image>
+                    </TouchableNativeFeedback>
                   </View>
-                  <View style={{marginLeft: 16, flex: 1}}>
-                    <Text style={styles.contactName}>{x.name}</Text>
-                    <Text style={styles.contactName}>{x.contact}</Text>
-                  </View>
-                  <TouchableNativeFeedback
-                    onPress={() => {
-                      fadeIn(() =>
-                        AlertView(fadeOut, () => {
-                          console.log('remove saviour');
-                          fadeOut();
-                        }),
-                      );
-                    }}>
-                    <Image
-                      source={require('./images/remove.png')}
-                      style={{marginTop: 15}}></Image>
-                  </TouchableNativeFeedback>
                 </View>
-              </View>
-            ))}
+              ) : null,
+            )}
             <BorderButton
               title="+ Add Contacts"
               color="#6739B7"
@@ -179,27 +189,48 @@ class RegistrationSaviours extends React.Component {
             </View>
             <ScrollView style={{padding: 24, flex: 1}}>
               {this.state.contacts.map((c, i) => (
-                <View style={{height: 62}} key={'contact-' + i}>
-                  <View style={{flexDirection: 'row'}}>
-                    <View
-                      style={{
-                        width: 50,
-                        height: 50,
-                        backgroundColor: '#F6F3FB',
-                        borderRadius: 50,
-                      }}>
-                      <Text style={styles.nameIconText}>{c.givenName[0]}</Text>
-                    </View>
-                    <View style={{marginLeft: 16, flex: 1}}>
-                      <Text style={styles.contactName}>
-                        {c.givenName + ' ' + c.familyName}
-                      </Text>
-                      <Text style={styles.contactName}>
-                        {c.phoneNumbers[0].number}
-                      </Text>
+                <TouchableNativeFeedback
+                  onPress={() => {
+                    var nconts = this.state.contacts;
+                    if (c.selected) {
+                      nconts[i].selected = false;
+                    } else {
+                      nconts[i].selected = true;
+                    }
+                    this.setState({
+                      contacts: nconts,
+                    });
+                  }}
+                  key={'contact-' + i}>
+                  <View style={{height: 62}} key={'contact-' + i}>
+                    <View style={{flexDirection: 'row'}}>
+                      <View
+                        style={{
+                          width: 50,
+                          height: 50,
+                          backgroundColor: '#F6F3FB',
+                          borderRadius: 50,
+                        }}>
+                        {!c.selected && (
+                          <Text style={styles.nameIconText}>
+                            {c.givenName[0]}
+                          </Text>
+                        )}
+                        {c.selected && (
+                          <Text style={styles.nameIconText}>✓</Text>
+                        )}
+                      </View>
+                      <View style={{marginLeft: 16, flex: 1}}>
+                        <Text style={styles.contactName}>
+                          {c.givenName + ' ' + c.familyName}
+                        </Text>
+                        <Text style={styles.contactName}>
+                          {c.phoneNumbers[0].number}
+                        </Text>
+                      </View>
                     </View>
                   </View>
-                </View>
+                </TouchableNativeFeedback>
               ))}
             </ScrollView>
             <SolidButton
