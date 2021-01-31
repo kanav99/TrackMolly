@@ -111,19 +111,36 @@ const removeProtectee = (uid, protectee_id) => {
 };
 
 const addLocation = (uid, location, time) => {
-  user_ref.once('value').then(async (snapshot) => {
+  user_ref.once('value').then((snapshot) => {
     var value = snapshot.val();
-    console.log(value);
+    // console.log(value);
     for (var key in value) {
-      console.log(value[key]['name']);
+      // console.log(value[key]['name']);
       if (value[key]['uid'] == uid) {
-        await user_ref
+        user_ref
           .child(key + '/logs')
           .push({
             location: location,
             time: time,
           })
           .then(() => console.log('added location'));
+      }
+    }
+  });
+};
+
+const getLogs = (uid, cb) => {
+  user_ref.once('value').then((snapshot) => {
+    var value = snapshot.val();
+    for (var key in value) {
+      if (value[key]['uid'] == uid) {
+        user_ref
+          .child(key + '/logs')
+          .once('value')
+          .then((snapshot_logs) => {
+            var logs = snapshot_logs.val();
+            cb(logs);
+          });
       }
     }
   });
@@ -190,5 +207,6 @@ export {
   addLocation,
   getProtectees,
   getSaviours,
+  getLogs,
   testFunction,
 };

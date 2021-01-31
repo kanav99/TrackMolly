@@ -31,7 +31,7 @@ import globalData from '../Globals';
 const totalWidth = Dimensions.get('window').width;
 const tabWidth = totalWidth / 2;
 
-function fix(saviours) {
+export function fix(saviours) {
   return saviours
     ? Object.keys(saviours).map((x, i) => ({
         name: saviours[x].name,

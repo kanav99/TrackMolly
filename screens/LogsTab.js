@@ -6,6 +6,17 @@ import StarRating from 'react-native-star-rating';
 import OrangeButton from './OrangeButton';
 import {TouchableNativeFeedback} from 'react-native-gesture-handler';
 
+import {fix} from './SavioursTab';
+import auth from '@react-native-firebase/auth';
+import {
+  addSaviour,
+  getProtectees,
+  getSaviours,
+  removeSaviour,
+  addLocation,
+  getLogs,
+} from '../api/database-helper';
+
 const LogItem = ({place, time, status, selected, onDelete}) => {
   return (
     <View
@@ -95,12 +106,12 @@ class LogsTab extends React.Component {
       selected: -1,
       logs: [
         {
-          place: 'Hinckley & District Museum area 1',
+          location: 'Hinckley & District Museum area 1',
           time: '4:22 PM',
           status: true,
         },
         {
-          place: 'Hinckley & District Museum area 2',
+          location: 'Hinckley & District Museum area 2',
           time: '4:22 PM',
           status: false,
         },
@@ -108,6 +119,15 @@ class LogsTab extends React.Component {
     };
     // TODO: Populate from firebase
     this.deleteLog = this.deleteLog.bind(this);
+  }
+
+  componentDidMount() {
+    var user = auth().currentUser;
+    getLogs(user.uid, (logs) => {
+      this.setState({
+        logs: fix(logs),
+      });
+    });
   }
 
   deleteLog = (i) => {
@@ -132,7 +152,7 @@ class LogsTab extends React.Component {
               return (
                 <LogItem
                   key={'log-' + i}
-                  place={x.place}
+                  place={x.location}
                   time={x.time}
                   status={x.status}
                   selected={true}
@@ -150,7 +170,7 @@ class LogsTab extends React.Component {
                 }}
                 key={'log-' + i}>
                 <LogItem
-                  place={x.place}
+                  place={x.location}
                   time={x.time}
                   status={x.status}
                   selected={i == this.state.selected}
