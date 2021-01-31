@@ -8,6 +8,8 @@ target 'TrackMolly' do
 
   use_react_native!(:path => config["reactNativePath"])
 
+  pod 'react-native-location', :path => '../node_modules/react-native-location/react-native-location.podspec'
+
   target 'TrackMollyTests' do
     inherit! :complete
     # Pods for testing
