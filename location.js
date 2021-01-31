@@ -11,16 +11,16 @@ class locationTracking extends Component {
 
   componentWillMount() {
     RNLocation.configure({
-      distanceFilter: 20, // Meters
+      distanceFilter: null, // Meters
       desiredAccuracy: {
         ios: 'best',
         android: 'balancedPowerAccuracy',
       },
       // Android only
       androidProvider: 'auto',
-      interval: 300000, // 5 min
-      fastestInterval: 600000, // Milliseconds
-      maxWaitTime: 600000, // Milliseconds
+      // interval: 300000, // 5 min
+      // fastestInterval: 600000, // Milliseconds
+      // maxWaitTime: 600000, // Milliseconds
       // iOS Only
       activityType: 'other',
       allowsBackgroundLocationUpdates: true,
@@ -63,11 +63,17 @@ class locationTracking extends Component {
   };
 
   startTracking = () => {
-    this.locationSubscription = RNLocation.subscribeToLocationUpdates(
-      (locations) => {
-        this.setState({location: locations[0]});
-      },
-    );
+    this.locationSubscription = RNLocation.getLatestLocation({
+      timeout: 60000,
+    }).then((latestLocation) => {
+      this.setState({location: latestLocation});
+    });
+    setTimeout(this.startTracking, 300000);
+    // this.locationSubscription = RNLocation.subscribeToLocationUpdates(
+    //   (locations) => {
+    //     this.setState({location: locations[0]});
+    //   },
+    // );
   };
 
   stopTracking = () => {
