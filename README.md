@@ -4,6 +4,8 @@
 
 Privacy-preserving tracking for social safety - made for women and everyone.
 
+Download the APK here - https://github.com/kanav99/TrackMolly/releases/download/0.0.1/TrackMolly.apk
+
 ## Inspiration
 
 Women have fought a long battle for their freedom from bounds set by a patriarchal society like restrictions on their clothing, on their movement, jobs, etc. But there is still one thing that restricts their freedom - safety. Crimes against women have significantly restricted their freedom - they are still hesitant to work in night shifts or travel to unknown cities. While this concern of safety can be partly solved by tracking location using applications like Google Maps and WhatsApp and sending them to known ones, this again puts them in the question - are they really free when they can be constantly spied by someone? TrackMolly is an application that aims to solve this issue of safety and privacy.
