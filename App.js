@@ -24,8 +24,11 @@ import globalData from './Globals';
 import Geolocation from 'react-native-geolocation-service';
 import firebase from '@react-native-firebase/app';
 import auth from '@react-native-firebase/auth';
+<<<<<<< HEAD
 import PhoneAuthScreen from './PhoneAuthScreen';
 import messaging from '@react-native-firebase/messaging';
+=======
+>>>>>>> fmain2
 
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
@@ -35,20 +38,16 @@ import RegistrationOTP from './screens/RegistrationOTP';
 import RegistrationName from './screens/RegistrationName';
 import WelcomeBack from './screens/WelcomeBack';
 import Landing from './screens/Landing';
+import RegistrationSaviours from './screens/RegistrationSaviours';
+import RegistrationPIN from './screens/RegistrationPIN';
+import {
+  addProtectee,
+  addSaviour,
+  getProtectees,
+  getSaviours,
+} from './api/database-helper';
 
 const Stack = createStackNavigator();
-
-const HomeScreen = ({navigation}) => {
-  return (
-    <Button
-      title="Go to Jane's profile"
-      onPress={() => navigation.navigate('Profile', {name: 'Jane'})}
-    />
-  );
-};
-const ProfileScreen = ({navigation, route}) => {
-  return <Text>This is {route.params.name}'s profile</Text>;
-};
 
 const App = () => {
   useEffect(() => {
@@ -92,6 +91,11 @@ const App = () => {
         />
         <Stack.Screen name="RegistrationOTP" component={RegistrationOTP} />
         <Stack.Screen name="RegistrationName" component={RegistrationName} />
+        <Stack.Screen
+          name="RegistrationSaviours"
+          component={RegistrationSaviours}
+        />
+        <Stack.Screen name="RegistrationPIN" component={RegistrationPIN} />
         <Stack.Screen name="WelcomeBack" component={WelcomeBack} />
         <Stack.Screen name="Landing" component={Landing} />
       </Stack.Navigator>

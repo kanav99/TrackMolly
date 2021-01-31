@@ -29,6 +29,7 @@ class RegistrationMobileNumber extends React.Component {
         .then((confirmResult) => {
           console.log(confirmResult);
           globalData.otp = confirmResult;
+          globalData.phone = '+91' + this.state.phone;
           this.state.navigation.navigate('RegistrationOTP', {
             phone: '+91' + this.state.phone,
           });

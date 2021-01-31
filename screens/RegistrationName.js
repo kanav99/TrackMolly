@@ -12,14 +12,13 @@ import styled from 'styled-components';
 import LongButton from './LongButton';
 import globalData from '../Globals';
 import auth from '@react-native-firebase/auth';
+import {addUser} from '../api/database-helper';
 
 class RegistrationName extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       name: '',
-      navigation: props.navigation,
-      route: props.route,
     };
     this.setName = this.setName.bind(this);
   }
@@ -29,10 +28,11 @@ class RegistrationName extends React.Component {
     user.updateProfile({
       displayName: this.state.name,
     });
-    // this.state.navigation.navigate('RegistrationSaviours');
-    this.state.navigation.reset({
-      routes: [{name: 'Landing'}],
-    });
+    addUser(user.uid, this.state.name, user.phoneNumber);
+    this.props.navigation.navigate('RegistrationSaviours');
+    // this.state.navigation.reset({
+    //   routes: [{name: 'Landing'}],
+    // });
   }
 
   render() {

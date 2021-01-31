@@ -10,6 +10,7 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@react-native-async-storage/async-storage": "^1.13.3",
     "@react-native-community/masked-view": "^0.1.10",
     "@react-native-firebase/app": "^10.5.0",
     "@react-native-firebase/auth": "^10.5.1",
@@ -22,10 +23,12 @@
     "react": "16.13.1",
     "react-animated-popup": "^0.1.1",
     "react-native": "0.63.4",
+    "react-native-contacts": "^6.0.4",
     "react-native-geolocation-service": "^5.1.1",
     "react-native-gesture-handler": "^1.9.0",
     "react-native-maps": "^0.27.1",
     "react-native-push-notification": "^7.2.0",
+    "react-native-raw-bottom-sheet": "^2.2.0",
     "react-native-reanimated": "^1.13.2",
     "react-native-safe-area-context": "^3.1.9",
     "react-native-screens": "^2.15.2",

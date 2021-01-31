@@ -147,9 +147,9 @@ class LogsTab extends React.Component {
               <TouchableNativeFeedback
                 onPress={() => {
                   this.setState({selected: i});
-                }}>
+                }}
+                key={'log-' + i}>
                 <LogItem
-                  key={'log-' + i}
                   place={x.place}
                   time={x.time}
                   status={x.status}

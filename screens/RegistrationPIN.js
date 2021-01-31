@@ -10,34 +10,22 @@ import {
 import Balls from './Balls';
 import styled from 'styled-components';
 import LongButton from './LongButton';
-import globalData from '../Globals';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-class RegistrationMobileNumber extends React.Component {
+class RegistrationPIN extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      otp: '',
+      pin: '',
     };
-    this.confirmOTP = this.confirmOTP.bind(this);
+    this.confirmPIN = this.confirmPIN.bind(this);
   }
 
-  confirmOTP = () => {
-    globalData.otp
-      .confirm(this.state.otp)
-      .then((result) => {
-        if (result.additionalUserInfo.isNewUser) {
-          this.props.navigation.navigate('RegistrationName');
-        } else {
-          globalData.name = result.user.displayName;
-          this.props.navigation.navigate('WelcomeBack', {
-            name: result.user.displayName,
-          });
-        }
-      })
-      .catch((error) => {
-        alert(error.message);
-        console.log(error);
-      });
+  confirmPIN = async () => {
+    await AsyncStorage.setItem('@pin', this.state.pin);
+    this.props.navigation.reset({
+      routes: [{name: 'Landing'}],
+    });
   };
 
   render() {
@@ -45,27 +33,26 @@ class RegistrationMobileNumber extends React.Component {
       <SafeAreaView>
         <View>
           <Balls />
-          <Text style={styles.banner}>I just pinged you!</Text>
+          <Text style={styles.banner}>Privacy is important! 🔓</Text>
           <View style={styles.frame}>
             <View style={styles.inner}>
-              <Text style={styles.text}>Enter OTP sent via SMS on</Text>
-              <Text style={styles.text}>
-                📱 {this.props.route.params.phone}
-              </Text>
+              <Text style={styles.text}>Set a 3-digit security PIN 🔑 </Text>
+
               <TextInput
                 style={styles.otpInput}
                 selectionColor="#6739b7"
-                keyboardType="number-pad"
-                value={this.state.otp}
+                secureTextEntry={true}
+                keyboardType="numeric"
+                value={this.state.pin}
                 onChangeText={(val) => {
                   this.setState({
-                    otp: val,
+                    pin: val,
                   });
                 }}
-                maxLength={6}></TextInput>
+                maxLength={3}></TextInput>
             </View>
             <ButtonGroup>
-              <LongButton title="Verify" onPress={this.confirmOTP} />
+              <LongButton title="Confirm" onPress={this.confirmPIN} />
             </ButtonGroup>
           </View>
         </View>
@@ -77,7 +64,6 @@ class RegistrationMobileNumber extends React.Component {
 const styles = StyleSheet.create({
   banner: {
     position: 'absolute',
-    width: 190,
     height: 33,
     left: 24,
     top: 74,
@@ -106,7 +92,6 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
   },
   inner: {
-    width: 195,
     height: 148,
     top: 0,
     left: 0,
@@ -127,11 +112,13 @@ const styles = StyleSheet.create({
     position: 'absolute',
     backgroundColor: '#eee',
     bottom: 0,
-    width: '90%',
+    width: 5,
+    width: '40%',
+    marginLeft: 100,
     fontWeight: '600',
     fontSize: 32,
     color: '#6739B7',
-    letterSpacing: 10,
+    letterSpacing: 25,
   },
   verify: {
     right: 24,
@@ -150,4 +137,4 @@ const ButtonGroup = styled.View`
   margin: 0px;
 `;
 
-export default RegistrationMobileNumber;
+export default RegistrationPIN;
