@@ -13,14 +13,28 @@ import LongButton from './LongButton';
 import globalData from '../Globals';
 import auth from '@react-native-firebase/auth';
 import {addUser} from '../api/database-helper';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 class RegistrationName extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       name: '',
+      token: '',
     };
     this.setName = this.setName.bind(this);
+  }
+  getToken = async () => {
+    let fcmToken = await AsyncStorage.getItem('fcmToken');
+    console.log(fcmToken);
+    if (!fcmToken) {
+        fcmToken = await firebase.messaging().getToken();
+        if (fcmToken) {
+            console.log(fcmToken);
+            await AsyncStorage.setItem('fcmToken', fcmToken);
+        }
+    }
+    this.setState({token: fcmToken});
   }
 
   setName() {
@@ -28,8 +42,10 @@ class RegistrationName extends React.Component {
     user.updateProfile({
       displayName: this.state.name,
     });
-    addUser(user.uid, this.state.name, user.phoneNumber);
-    this.props.navigation.navigate('RegistrationSaviours');
+    this.getToken().then(() => {
+      addUser(user.uid, this.state.name, user.phoneNumber, this.state.token);
+      this.props.navigation.navigate('RegistrationSaviours');
+    });
     // this.state.navigation.reset({
     //   routes: [{name: 'Landing'}],
     // });

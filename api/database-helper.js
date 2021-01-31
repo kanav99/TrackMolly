@@ -2,13 +2,14 @@ import database from '@react-native-firebase/database';
 
 const user_ref = database().ref('/users');
 
-const addUser = async (uid, username, mobile) => {
+const addUser = async (uid, username, mobile, fcmtoken) => {
   console.log('inside function');
   await user_ref
     .push({
       uid: uid,
       name: username,
       mobile: mobile,
+      fcmtoken: fcmtoken,
     })
     .then(() => console.log('Added user ', username));
 };
