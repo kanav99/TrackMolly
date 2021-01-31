@@ -95,7 +95,7 @@ class App extends React.Component {
     const {quickTip, fadeAnim} = this.state;
     const screenHeight = Dimensions.get('window').height;
 
-    var initalScreen = user == null ? 'RegistrationMobileNumber' : 'Landing';
+    var initalScreen = user == null ? 'Splash' : 'Landing';
     return (
       <>
         <NavigationContainer>
