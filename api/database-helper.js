@@ -1,6 +1,7 @@
 import database from '@react-native-firebase/database';
 
 const user_ref = database().ref('/users');
+const ratings_ref = database().ref('/ratings');
 
 const addUser = async (uid, username, mobile, fcmtoken) => {
   console.log('inside function');
@@ -129,6 +130,30 @@ const addLocation = (uid, location, time) => {
   });
 };
 
+const getRating = (x, y, cb) => {
+  var id = `loc${Math.floor(x * 1000)}|${Math.floor(y * 1000)}`;
+  console.log(id);
+  ratings_ref
+    .child(id)
+    .once('value')
+    .then((snapshot) => {
+      var value = snapshot.val();
+      var n = 0;
+      var sum = 0.0;
+      for (var key in value) {
+        sum += value[key];
+        n += 1;
+      }
+      cb(sum / n);
+    });
+};
+
+const addRating = (uid, x, y, rating) => {
+  var id = `loc${Math.floor(x * 1000)}|${Math.floor(y * 1000)}`;
+  console.log(id);
+  ratings_ref.child(id).child(uid).set(rating);
+};
+
 const getLogs = (uid, cb) => {
   user_ref.once('value').then((snapshot) => {
     var value = snapshot.val();
@@ -209,4 +234,5 @@ export {
   getSaviours,
   getLogs,
   testFunction,
+  getRating,
 };

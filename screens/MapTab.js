@@ -4,7 +4,30 @@ import MapView from 'react-native-maps';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Location from './Location';
 
+const API_KEY = 'AIzaSyAiFf80N2skv0zHFHBgWImrunf3tn-ozgM';
+import Geocoder from 'react-native-geocoding';
+import {useState} from 'react/cjs/react.development';
+import {getRating} from '../api/database-helper';
+Geocoder.init(API_KEY);
+
 const MapTab = ({navigation, route}) => {
+  const [locationName, setLocationName] = useState(
+    'Hinckley & District Museum area',
+  );
+  const [rating, setRating] = useState(4.2);
+
+  Geocoder.from(37.78825, -122.4325).then((json) => {
+    // console.log(JSON.stringify(json, null, 2));
+    console.log(json.results[0].place_id);
+    console.log(json.results[0].formatted_address);
+    console.log(json.plus_code.global_code);
+    var addressComponent = json.results[0].address_components[0];
+    console.log(addressComponent);
+  });
+  getRating(37.78825, -122.432, (r) => {
+    console.log(r);
+  });
+
   return (
     <SafeAreaView style={{flex: 1}}>
       <Location />
