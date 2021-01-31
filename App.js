@@ -69,7 +69,6 @@ class App extends React.Component {
     });
     return unsubscribe;
     //       return unsubscribe;
-  }, []);
   }
 
   showQuickTip = (view, cb) => {
@@ -199,6 +198,5 @@ class App extends React.Component {
 }
 
 const styles = StyleSheet.create({});
->>>>>>> fmain
 
 export default App;
