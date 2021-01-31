@@ -13,7 +13,8 @@ import LongButton from './LongButton';
 import globalData from '../Globals';
 import auth from '@react-native-firebase/auth';
 import {addUser} from '../api/database-helper';
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import messaging from '@react-native-firebase/messaging';
 
 class RegistrationName extends React.Component {
   constructor(props) {
@@ -23,26 +24,33 @@ class RegistrationName extends React.Component {
       token: '',
     };
     this.setName = this.setName.bind(this);
+    this.getToken = this.getToken.bind(this);
   }
-  getToken = async () => {
-    let fcmToken = await AsyncStorage.getItem('fcmToken');
-    console.log(fcmToken);
-    if (!fcmToken) {
-        fcmToken = await firebase.messaging().getToken();
-        if (fcmToken) {
-            console.log(fcmToken);
-            await AsyncStorage.setItem('fcmToken', fcmToken);
-        }
-    }
-    this.setState({token: fcmToken});
-  }
+  getToken = (cb) => {
+    AsyncStorage.getItem('fcmToken').then((fcmToken) => {
+      console.log(fcmToken);
+      if (!fcmToken) {
+        messaging()
+          .getToken()
+          .then((fcmToken) => {
+            if (fcmToken) {
+              console.log(fcmToken);
+              AsyncStorage.setItem('fcmToken', fcmToken);
+              this.setState({token: fcmToken}, cb);
+            }
+          });
+      } else {
+        this.setState({token: fcmToken}, cb);
+      }
+    });
+  };
 
   setName() {
     let user = auth().currentUser;
     user.updateProfile({
       displayName: this.state.name,
     });
-    this.getToken().then(() => {
+    this.getToken(() => {
       addUser(user.uid, this.state.name, user.phoneNumber, this.state.token);
       this.props.navigation.navigate('RegistrationSaviours');
     });

@@ -1,11 +1,23 @@
 import React from 'react';
-import {View, StyleSheet, Text, Animated, Dimensions} from 'react-native';
-
+import {
+  View,
+  StyleSheet,
+  Text,
+  Animated,
+  Dimensions,
+  MaterialIcons,
+  PermissionsAndroid,
+  SafeAreaView,
+  LogBox,
+} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import Geocoder from 'react-native-geocoding';
 import {TabBar} from './TabBar';
 import SolidButton from './SolidButton';
 import BorderButton from './BorderButton';
-
+import auth from '@react-native-firebase/auth';
+import RNLocation from 'react-native-location';
+import {addLocation, getRating} from '../api/database-helper';
 import SettingsTab from './SettingsTab';
 import SavioursTab from './SavioursTab';
 import LogsTab from './LogsTab';
@@ -13,12 +25,17 @@ import MapTab from './MapTab';
 
 import globalData from '../Globals';
 
+LogBox.ignoreLogs(['Warning: ...']);
+
 const Tab = createBottomTabNavigator();
 
 class Landing extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      user: auth().currentUser,
+      location: null,
+      rate: 0,
       navigation: props.navigation,
       route: props.route,
       showAlertBox: false,
@@ -26,6 +43,37 @@ class Landing extends React.Component {
       emergencyCounter: 4,
       alertButtonActive: false,
       alertView: null,
+      logs: [
+        {
+          location: 'Hinckley & District Museum area 1',
+          time: '4:22 PM',
+          status: true,
+          latitude: 28.7041,
+          longitude: 77.1,
+          rating: 0,
+        },
+        {
+          location: 'Hinckley & District Museum area 2',
+          time: '4:22 PM',
+          status: false,
+          latitude: 28.7041,
+          longitude: 77.102,
+          rating: 0,
+        },
+        {
+          location: 'Hinckley & District Museum area 2',
+          time: '4:22 PM',
+          status: false,
+          latitude: 28.7041,
+          longitude: 77.108,
+          rating: 0,
+        },
+      ],
+    };
+    this.sendLocation = {
+      x: 0,
+      y: 0,
+      name: 'ak',
     };
 
     this.fadeIn = this.fadeIn.bind(this);
@@ -35,11 +83,131 @@ class Landing extends React.Component {
     this.activateAlertButton = this.activateAlertButton.bind(this);
     this.alarmView = this.alarmView.bind(this);
     this.fadeInAlarm = this.fadeInAlarm.bind(this);
+    this.pushLog = this.pushLog.bind(this);
+    this.startTracking = this.startTracking.bind(this);
+    this.stopTracking = this.stopTracking.bind(this);
 
     globalData.fadeIn = this.fadeIn;
     globalData.fadeOut = this.fadeOut;
     globalData.fadeInAlarm = this.fadeInAlarm;
+    this.startTracking();
   }
+
+  componentDidMount() {
+    Geocoder.init('AIzaSyAiFf80N2skv0zHFHBgWImrunf3tn-ozgM', {language: 'en'});
+    RNLocation.configure({
+      distanceFilter: 5, // Meters
+      desiredAccuracy: {
+        ios: 'best',
+        android: 'balancedPowerAccuracy',
+      },
+      // Android only
+      androidProvider: 'auto',
+      interval: 300000, // 5 min
+      // fastestInterval: 600000, // Milliseconds
+      // maxWaitTime: 600000, // Milliseconds
+      // iOS Only
+      activityType: 'other',
+      allowsBackgroundLocationUpdates: true,
+      headingOrientation: 'portrait',
+      pausesLocationUpdatesAutomatically: false,
+      showsBackgroundLocationIndicator: false,
+    });
+
+    PermissionsAndroid.requestMultiple(
+      [
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION,
+      ],
+      {
+        title: 'Location',
+        message: 'This app would like to view your Location.',
+        buttonPositive: 'Please accept bare mortal',
+      },
+    ).then(() => {
+      this.startTracking();
+    });
+    // DEBUGGING!!
+    // setInterval(() => {
+    //   console.log('yo');
+    //   const {logs} = this.state;
+    //   const ll = logs[logs.length - 1];
+    //   this.pushLog({
+    //     location: 'Hinckley & District Museum area 2',
+    //     time: '4:22 PM',
+    //     status: false,
+    //     longitude: ll.longitude + Math.random() * 0.002,
+    //     latitude: ll.latitude + Math.random() * 0.002,
+    //   });
+    // }, 300000);
+  }
+
+  startTracking = () => {
+    this.locationSubscription = RNLocation.subscribeToLocationUpdates(
+      (locations) => {
+        console.log('Builddddddddddddddddddddddddddddd');
+        this.setState({location: locations[0]});
+        this.sendLocation.x = locations[0].latitude;
+        this.sendLocation.y = locations[0].longitude;
+        Geocoder.from(this.sendLocation.x, this.sendLocation.y).then((json) => {
+          this.sendLocation.name = String(json.results[0].formatted_address);
+          addLocation(this.state.user.uid, this.sendLocation, Date.now());
+          console.log('SENNNTTTT' + this.sendLocation);
+          const {logs} = this.state;
+          getRating(this.sendLocation.x, this.sendLocation.y, (r) => {
+            this.setState({rate: r ? r : 0});
+            this.pushLog({
+              location: this.sendLocation.name,
+              time: Date.now(),
+              status: false,
+              longitude: locations[0].longitude,
+              latitude: locations[0].latitude,
+              rating: this.rate,
+            });
+          });
+          // console.log(logs.length);
+          // const ll = logs[logs.length - 1];
+          // console.log('AAAAAAAAAAAAAA' + this.sendLocation.name);
+          // console.log(addressComponent);
+        });
+        // console.log('AAAAAAAAAAAAAA' + this.sendLocation.x);
+        // getRating(this.sendLocation.x, this.sendLocation.y, (r) => {
+        //   this.setState({rate: r});
+        // });
+        // console.log('AAAAAAAAAAAAAA' + this.sendLocation.name);
+        // console.log('AAAAAAAAAAAAAA' + this.rate);
+        console.log('sent');
+        // console.log('yo');
+        // const {logs} = this.state;
+        // console.log(logs.length);
+        // // const ll = logs[logs.length - 1];
+        // this.pushLog({
+        //   location: this.sendLocation.name,
+        //   time: Date.now(),
+        //   status: false,
+        //   longitude: locations[0].longitude,
+        //   latitude: locations[0].latitude,
+        //   rating: this.rate,
+        // });
+      },
+    );
+  };
+
+  stopTracking = () => {
+    clearTimeout(this.trackState);
+    this.setState({location: null});
+  };
+
+  pushLog = (log) => {
+    console.log('ho');
+    const logs = this.state.logs;
+    logs.push(log);
+    this.setState({
+      logs,
+    });
+    // console.log('THISSSS' + log.location);
+    // console.log('THISSSS' + log.rating);
+  };
 
   decrementCounter = () => {
     if (this.state.emergencyCounter > 1) {
@@ -85,7 +253,9 @@ class Landing extends React.Component {
           duration: 200,
           useNativeDriver: true,
         }).start(() => {
-          if (timer) this.decrementCounter();
+          if (timer) {
+            this.decrementCounter();
+          }
         });
       },
     );
@@ -160,29 +330,36 @@ class Landing extends React.Component {
           <SolidButton
             title="Send Alert"
             color={'#FF6D0A'}
-            activeButton={true}></SolidButton>
+            activeButton={true}
+          />
         )}
         {!this.state.alertButtonActive && (
           <SolidButton
             title="Send Alert"
             color={'#FF6D0A'}
-            activeButton={false}></SolidButton>
+            activeButton={false}
+          />
         )}
-        <BorderButton
-          title="Cancel"
-          color="#6739B7"
-          onPress={this.fadeOut}></BorderButton>
+        <BorderButton title="Cancel" color="#6739B7" onPress={this.fadeOut} />
       </>
     );
   };
 
   render() {
     const screenHeight = Dimensions.get('window').height;
+    const WrappedMap = (props) => (
+      <MapTab {...props} logs={this.state.logs} pushLog={this.pushLog} />
+    );
+
+    const WrappedLogs = (props) => (
+      <LogsTab {...props} logs={this.state.logs} pushLog={this.pushLog} />
+    );
+
     return (
       <>
         <Tab.Navigator tabBar={(props) => <TabBar {...props} />}>
-          <Tab.Screen name="Map" component={MapTab} />
-          <Tab.Screen name="Logs" component={LogsTab} />
+          <Tab.Screen name="Map" component={WrappedMap} />
+          <Tab.Screen name="Logs" component={WrappedLogs} />
           <Tab.Screen name="Saviours" component={SavioursTab} />
           <Tab.Screen
             name="Settings"
@@ -205,7 +382,8 @@ class Landing extends React.Component {
                 top: 0,
                 bottom: 0,
               }}
-              onTouchEnd={this.fadeOut}></Animated.View>
+              onTouchEnd={this.fadeOut}
+            />
             <Animated.View
               style={{
                 backgroundColor: 'white',

@@ -4,10 +4,34 @@ import MapView from 'react-native-maps';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Location from './Location';
 
-const MapTab = ({navigation, route}) => {
+const API_KEY = 'AIzaSyAiFf80N2skv0zHFHBgWImrunf3tn-ozgM';
+import Geocoder from 'react-native-geocoding';
+import {useState} from 'react/cjs/react.development';
+import {getRating} from '../api/database-helper';
+Geocoder.init(API_KEY);
+
+const MapTab = ({navigation, route, screenProps, logs, pushLog}) => {
+  // const [locationName, setLocationName] = useState(
+  //   'Hinckley & District Museum area',
+  // );
+  // const [rating, setRating] = useState(4.2);
+
+  // Geocoder.from(37.78825, -122.4325).then((json) => {
+  //   // console.log(JSON.stringify(json, null, 2));
+  //   console.log(json.results[0].place_id);
+  //   console.log(json.results[0].formatted_address);
+  //   console.log(json.plus_code.global_code);
+  //   var addressComponent = json.results[0].address_components[0];
+  //   console.log(addressComponent);
+  // });
+  // getRating(37.78825, -122.432, (r) => {
+  //   console.log(r);
+  // });
+  var loc = logs[logs.length - 1].location;
+  var rate = logs[logs.length - 1].rating ? logs[logs.length - 1].rating : 'No rating';
   return (
     <SafeAreaView style={{flex: 1}}>
-      <Location />
+      <Location logs={logs} pushLog={pushLog} />
       <View style={styles.topBar}>
         <View style={styles.locationSummary}>
           <MaterialIcons
@@ -16,8 +40,8 @@ const MapTab = ({navigation, route}) => {
             style={{color: 'white', opacity: 0.6, top: 2}}
           />
           <View style={styles.locationText}>
-            <Text style={styles.text1}>Hinckley & District Museum area</Text>
-            <Text style={styles.text2}>Safety Rating: 4.2/5</Text>
+            <Text style={styles.text1}>{loc}</Text>
+            <Text style={styles.text2}>{rate}</Text>
           </View>
         </View>
       </View>
