@@ -13,6 +13,12 @@ import {
 import MapView, {Marker} from 'react-native-maps';
 import globalData from '../Globals';
 
+function betterTime(t) {
+  var d = new Date(0);
+  d.setUTCMilliseconds(t);
+  return d.toUTCString();
+}
+
 class Location extends React.Component {
   constructor() {
     super();
@@ -78,14 +84,14 @@ class Location extends React.Component {
   //   });
   // };
 
-  startTracking = () => {
-    this.locationSubscription = RNLocation.subscribeToLocationUpdates(
-      (locations) => {
-        console.log(locations);
-        this.setState({location: locations[0]});
-      },
-    );
-  };
+  // startTracking = () => {
+  //   this.locationSubscription = RNLocation.subscribeToLocationUpdates(
+  //     (locations) => {
+  //       console.log(locations);
+  //       this.setState({location: locations[0]});
+  //     },
+  //   );
+  // };
 
   stopTracking = () => {
     clearTimeout(this.trackState);
@@ -95,7 +101,6 @@ class Location extends React.Component {
   render() {
     const {location} = this.state;
     const {logs} = this.props;
-    console.log(logs);
     return (
       logs && (
         <MapView
@@ -104,8 +109,12 @@ class Location extends React.Component {
           scrollEnabled={false}
           style={{flex: 1}}
           region={{
-            latitude: logs[logs.length - 1].latitude ? logs[logs.length - 1].latitude : 0,
-            longitude: logs[logs.length - 1].longitude ? logs[logs.length - 1].longitude : 0,
+            latitude: logs[logs.length - 1].latitude
+              ? logs[logs.length - 1].latitude
+              : 0,
+            longitude: logs[logs.length - 1].longitude
+              ? logs[logs.length - 1].longitude
+              : 0,
             latitudeDelta: 0.0461,
             longitudeDelta: 0.021,
           }}>
@@ -114,7 +123,7 @@ class Location extends React.Component {
               key={i}
               coordinate={{latitude: m.latitude, longitude: m.longitude}}
               title={m.location}
-              description={m.time}>
+              description={betterTime(m.time)}>
               <View
                 style={
                   i == logs.length - 1

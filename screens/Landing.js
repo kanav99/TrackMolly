@@ -8,6 +8,7 @@ import {
   MaterialIcons,
   PermissionsAndroid,
   SafeAreaView,
+  LogBox,
 } from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {TabBar} from './TabBar';
@@ -22,6 +23,8 @@ import LogsTab from './LogsTab';
 import MapTab from './MapTab';
 
 import globalData from '../Globals';
+
+LogBox.ignoreLogs(['Warning: ...']);
 
 const Tab = createBottomTabNavigator();
 
@@ -87,7 +90,7 @@ class Landing extends React.Component {
 
   componentDidMount() {
     RNLocation.configure({
-      distanceFilter: 100, // Meters
+      distanceFilter: 5, // Meters
       desiredAccuracy: {
         ios: 'best',
         android: 'balancedPowerAccuracy',
@@ -144,7 +147,8 @@ class Landing extends React.Component {
         console.log('sent');
         console.log('yo');
         const {logs} = this.state;
-        const ll = logs[logs.length - 1];
+        console.log(logs.length);
+        // const ll = logs[logs.length - 1];
         this.pushLog({
           location: 'Hinckley & District Museum area 2',
           time: Date.now(),
@@ -308,30 +312,19 @@ class Landing extends React.Component {
 
   render() {
     const screenHeight = Dimensions.get('window').height;
+    const WrappedMap = (props) => (
+      <MapTab {...props} logs={this.state.logs} pushLog={this.pushLog} />
+    );
+
+    const WrappedLogs = (props) => (
+      <LogsTab {...props} logs={this.state.logs} pushLog={this.pushLog} />
+    );
+
     return (
       <>
         <Tab.Navigator tabBar={(props) => <TabBar {...props} />}>
-          <Tab.Screen
-            name="Map"
-            component={(props) => (
-              <MapTab
-                {...props}
-                logs={this.state.logs}
-                pushLog={this.pushLog}
-              />
-            )}
-          />
-          <Tab.Screen
-            name="Logs"
-            component={(props) => (
-              <LogsTab
-                {...props}
-                logs={this.state.logs}
-                pushLog={this.pushLog}
-              />
-            )}
-            initialParams={{logs: this.state.logs, pushLog: this.pushLog}}
-          />
+          <Tab.Screen name="Map" component={WrappedMap} />
+          <Tab.Screen name="Logs" component={WrappedLogs} />
           <Tab.Screen name="Saviours" component={SavioursTab} />
           <Tab.Screen
             name="Settings"
