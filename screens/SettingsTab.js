@@ -12,6 +12,7 @@ import {
 import OrangeButton from './OrangeButton';
 
 import auth from '@react-native-firebase/auth';
+import globalData from '../Globals';
 
 const SettingsTab = ({route}) => {
   var [selection, setSelection] = useState(0);
@@ -95,7 +96,7 @@ const SettingsTab = ({route}) => {
                     style={{left: 40}}
                     color="#6739B7"
                     onPress={() => {
-                      console.log('hello');
+                      alert(globalData.pin);
                     }}
                   />
                   <OrangeButton
