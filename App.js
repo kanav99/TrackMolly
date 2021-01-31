@@ -23,7 +23,6 @@ import globalData from './Globals';
 import Geolocation from 'react-native-geolocation-service';
 import firebase from '@react-native-firebase/app';
 import auth from '@react-native-firebase/auth';
-import PhoneAuthScreen from './PhoneAuthScreen';
 
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
@@ -33,6 +32,8 @@ import RegistrationOTP from './screens/RegistrationOTP';
 import RegistrationName from './screens/RegistrationName';
 import WelcomeBack from './screens/WelcomeBack';
 import Landing from './screens/Landing';
+import RegistrationSaviours from './screens/RegistrationSaviours';
+import RegistrationPIN from './screens/RegistrationPIN';
 
 const Stack = createStackNavigator();
 
@@ -63,6 +64,11 @@ const App = () => {
         />
         <Stack.Screen name="RegistrationOTP" component={RegistrationOTP} />
         <Stack.Screen name="RegistrationName" component={RegistrationName} />
+        <Stack.Screen
+          name="RegistrationSaviours"
+          component={RegistrationSaviours}
+        />
+        <Stack.Screen name="RegistrationPIN" component={RegistrationPIN} />
         <Stack.Screen name="WelcomeBack" component={WelcomeBack} />
         <Stack.Screen name="Landing" component={Landing} />
       </Stack.Navigator>

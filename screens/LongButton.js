@@ -15,6 +15,15 @@ const LongButton = ({onPress, title}) => (
   </TouchableOpacity>
 );
 
+export const LongButtonTransparent = ({onPress, title}) => (
+  <TouchableOpacity
+    activeOpacity={0.9}
+    onPress={onPress}
+    style={styles.appTransButtonContainer}>
+    <Text style={styles.appTransButtonText}>{title}</Text>
+  </TouchableOpacity>
+);
+
 const styles = StyleSheet.create({
   // ...
   appButtonContainer: {
@@ -27,10 +36,27 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 38,
   },
+  appTransButtonContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'transparent',
+    borderRadius: 6,
+    width: '100%',
+    height: 38,
+  },
   appButtonText: {
     fontSize: 16,
     fontFamily: 'Open Sans',
     color: '#fff',
+    fontWeight: '600',
+    alignSelf: 'center',
+  },
+  appTransButtonText: {
+    fontSize: 16,
+    fontFamily: 'Open Sans',
+    color: '#6739B7',
     fontWeight: '600',
     alignSelf: 'center',
   },

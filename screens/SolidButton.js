@@ -19,7 +19,6 @@ class SolidButton extends React.Component {
   }
 
   render() {
-    console.log('solid ' + this.state.activeButton);
     return (
       <TouchableOpacity
         activeOpacity={0.4}

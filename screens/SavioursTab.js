@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {
   View,
   StyleSheet,
@@ -6,12 +6,21 @@ import {
   ScrollView,
   Image,
   TouchableNativeFeedback,
+  TouchableWithoutFeedback,
   Dimensions,
 } from 'react-native';
 import Animated from 'react-native-reanimated';
+import RBSheet from 'react-native-raw-bottom-sheet';
 
 import BorderButton from './BorderButton';
 import SolidButton from './SolidButton';
+import {TextInput} from 'react-native-gesture-handler';
+
+import {PermissionsAndroid} from 'react-native';
+import Contacts from 'react-native-contacts';
+
+const totalWidth = Dimensions.get('window').width;
+const tabWidth = totalWidth / 2;
 
 const AlertView = (fadeOut, onSuccess) => {
   return (
@@ -51,7 +60,10 @@ const AlertView = (fadeOut, onSuccess) => {
   );
 };
 
-const SettingsTab = ({route}) => {
+const SavioursTab = ({route}) => {
+  const [sheet, setSheet] = useState(null);
+  const [contacts, setContacts] = useState([]);
+
   const {fadeIn, fadeOut} = route.params;
   var [selection, setSelection] = useState(0);
   const [translateValue] = useState(new Animated.Value(0.0));
@@ -65,8 +77,7 @@ const SettingsTab = ({route}) => {
     {name: 'Mahak Gupta', contact: '+91 8702 694 200'},
   ]);
 
-  const totalWidth = Dimensions.get('window').width;
-  const tabWidth = totalWidth / 2;
+  const [layer, setLayer] = useState(false);
 
   const animateSlider = (index) => {
     Animated.spring(translateValue, {
@@ -81,112 +92,228 @@ const SettingsTab = ({route}) => {
   //   }, [selection]);
 
   return (
-    <View style={{flex: 1, backgroundColor: '#FFFFFF'}}>
-      <View style={styles.header}>
-        {selection == 0 && (
-          <>
-            <TouchableNativeFeedback style={{flex: 1}}>
-              <Text style={styles.tabSelected}>My Saviours</Text>
-            </TouchableNativeFeedback>
-            <TouchableNativeFeedback
-              style={{flex: 1}}
-              onPress={() => {
-                setSelection(1);
-                console.log('hej');
-                animateSlider(1);
-              }}>
-              <Text style={styles.tabInactive}>Protectees</Text>
-            </TouchableNativeFeedback>
-          </>
-        )}
-        {selection == 1 && (
-          <>
-            <TouchableNativeFeedback
-              style={{flex: 1}}
-              onPress={() => {
-                setSelection(0);
-                console.log('bonjour');
-                animateSlider(0);
-              }}>
-              <Text style={styles.tabInactive}>My Saviours</Text>
-            </TouchableNativeFeedback>
-            <TouchableNativeFeedback style={{flex: 1}}>
-              <Text style={styles.tabSelected}>Protectees</Text>
-            </TouchableNativeFeedback>
-          </>
-        )}
-      </View>
-      <Animated.View
-        style={[
-          styles.selectionBar,
-          {
-            // transform: [{translateX: translateValue}],
-            width: tabWidth,
-          },
-        ]}></Animated.View>
-      <View style={{padding: 16}}>
-        <View>
-          <Text style={styles.helpText}>
-            {selection == 0
-              ? 'I’ll send emergecy alerts to these trusted contacts'
-              : 'The following people have added you as their saviour!'}
-          </Text>
+    <>
+      <View style={{flex: 1, backgroundColor: '#FFFFFF'}}>
+        <View style={styles.header}>
+          {selection == 0 && (
+            <>
+              <TouchableNativeFeedback style={{flex: 1}}>
+                <Text style={styles.tabSelected}>My Saviours</Text>
+              </TouchableNativeFeedback>
+              <TouchableNativeFeedback
+                style={{flex: 1}}
+                onPress={() => {
+                  setSelection(1);
+                  console.log('hej');
+                  animateSlider(1);
+                }}>
+                <Text style={styles.tabInactive}>Protectees</Text>
+              </TouchableNativeFeedback>
+            </>
+          )}
+          {selection == 1 && (
+            <>
+              <TouchableNativeFeedback
+                style={{flex: 1}}
+                onPress={() => {
+                  setSelection(0);
+                  console.log('bonjour');
+                  animateSlider(0);
+                }}>
+                <Text style={styles.tabInactive}>My Saviours</Text>
+              </TouchableNativeFeedback>
+              <TouchableNativeFeedback style={{flex: 1}}>
+                <Text style={styles.tabSelected}>Protectees</Text>
+              </TouchableNativeFeedback>
+            </>
+          )}
         </View>
-        {selection == 1 && (
-          <View
-            style={{
-              paddingHorizontal: 20,
-              paddingVertical: 8,
-              marginTop: 24,
-              backgroundColor: '#FAFAFA',
-              borderRadius: 6,
-            }}>
-            <Text style={styles.altText}>
-              I’ll alert you when any of these contacts is in an emergency 🚨
+        <Animated.View
+          style={[
+            styles.selectionBar,
+            {
+              // transform: [{translateX: translateValue}],
+              width: tabWidth,
+            },
+          ]}></Animated.View>
+        <View style={{padding: 16}}>
+          <View>
+            <Text style={styles.helpText}>
+              {selection == 0
+                ? 'I’ll send emergecy alerts to these trusted contacts'
+                : 'The following people have added you as their saviour!'}
             </Text>
           </View>
-        )}
-        <ScrollView style={{margin: 24}}>
-          {(selection == 0 ? saviours : protectees).map((x, i) => (
-            <View style={{height: 62}} key={'contact-' + i}>
-              <View style={{flexDirection: 'row'}}>
-                <View
-                  style={{
-                    width: 50,
-                    height: 50,
-                    backgroundColor: '#F6F3FB',
-                    borderRadius: 50,
-                  }}>
-                  <Text style={styles.nameIconText}>{x.name[0]}</Text>
-                </View>
-                <View style={{marginLeft: 16, flex: 1}}>
-                  <Text style={styles.contactName}>{x.name}</Text>
-                  <Text style={styles.contactName}>{x.contact}</Text>
-                </View>
-                {selection == 0 && (
-                  <TouchableNativeFeedback
-                    onPress={() => {
-                      fadeIn(() =>
-                        AlertView(fadeOut, () => {
-                          console.log('remove saviour');
-                          fadeOut();
-                        }),
-                      );
-                    }}>
-                    <Image
-                      source={require('./images/remove.png')}
-                      style={{marginTop: 15}}></Image>
-                  </TouchableNativeFeedback>
-                )}
-              </View>
+          {selection == 1 && (
+            <View
+              style={{
+                paddingHorizontal: 20,
+                paddingVertical: 8,
+                marginTop: 24,
+                backgroundColor: '#FAFAFA',
+                borderRadius: 6,
+              }}>
+              <Text style={styles.altText}>
+                I’ll alert you when any of these contacts is in an emergency 🚨
+              </Text>
             </View>
-          ))}
-          {selection == 0 && (
-            <BorderButton title="+ Add Contacts" color="#6739B7" />
           )}
-        </ScrollView>
+          <ScrollView style={{margin: 24}}>
+            {(selection == 0 ? saviours : protectees).map((x, i) => (
+              <View style={{height: 62}} key={'contact-' + i}>
+                <View style={{flexDirection: 'row'}}>
+                  <View
+                    style={{
+                      width: 50,
+                      height: 50,
+                      backgroundColor: '#F6F3FB',
+                      borderRadius: 50,
+                    }}>
+                    <Text style={styles.nameIconText}>{x.name[0]}</Text>
+                  </View>
+                  <View style={{marginLeft: 16, flex: 1}}>
+                    <Text style={styles.contactName}>{x.name}</Text>
+                    <Text style={styles.contactName}>{x.contact}</Text>
+                  </View>
+                  {selection == 0 && (
+                    <TouchableNativeFeedback
+                      onPress={() => {
+                        fadeIn(() =>
+                          AlertView(fadeOut, () => {
+                            console.log('remove saviour');
+                            fadeOut();
+                          }),
+                        );
+                      }}>
+                      <Image
+                        source={require('./images/remove.png')}
+                        style={{marginTop: 15}}></Image>
+                    </TouchableNativeFeedback>
+                  )}
+                </View>
+              </View>
+            ))}
+            {selection == 0 && (
+              <BorderButton
+                title="+ Add Contacts"
+                color="#6739B7"
+                onPress={() => {
+                  PermissionsAndroid.request(
+                    PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
+                    {
+                      title: 'Contacts',
+                      message: 'This app would like to view your contacts.',
+                      buttonPositive: 'Please accept bare mortal',
+                    },
+                  )
+                    .then(() => Contacts.getAll())
+                    .then((conts) => {
+                      setContacts(conts);
+                      sheet.open();
+                    });
+                }}
+              />
+            )}
+          </ScrollView>
+        </View>
       </View>
-    </View>
+      {layer && (
+        <TouchableWithoutFeedback
+          onPress={() => {
+            refRBSheet.close();
+          }}>
+          <View
+            style={{
+              width: '100%',
+              position: 'absolute',
+              top: 0,
+              bottom: 0,
+              backgroundColor: 'black',
+              opacity: 0.7,
+            }}></View>
+        </TouchableWithoutFeedback>
+      )}
+      <RBSheet
+        ref={(ref) => {
+          setSheet(ref);
+        }}
+        // closeOnDragDown={true}
+        closeOnPressMask={false}
+        onOpen={() => {
+          setLayer(true);
+        }}
+        onClose={() => {
+          setLayer(false);
+        }}
+        height={480}
+        customStyles={{
+          wrapper: {
+            backgroundColor: 'transparent',
+          },
+          container: {
+            borderTopLeftRadius: 6,
+            borderTopRightRadius: 6,
+          },
+          draggableIcon: {
+            backgroundColor: '#000',
+          },
+        }}>
+        <View style={{flex: 1, padding: 24}}>
+          <View
+            style={{
+              height: 48,
+              borderRadius: 6,
+              backgroundColor: '#FAFAFA',
+              paddingHorizontal: 16,
+              flexDirection: 'row',
+            }}>
+            <TextInput
+              style={{
+                flex: 1,
+                fontFamily: 'Open Sans',
+                color: '#6739B7',
+                fontSize: 16,
+              }}
+              placeholder="Search contacts"></TextInput>
+            <Image
+              style={{marginTop: 12}}
+              source={require('./images/search.png')}></Image>
+          </View>
+          <ScrollView style={{padding: 24, flex: 1}}>
+            {contacts.map((c, i) => (
+              <View style={{height: 62}} key={'contact-' + i}>
+                <View style={{flexDirection: 'row'}}>
+                  <View
+                    style={{
+                      width: 50,
+                      height: 50,
+                      backgroundColor: '#F6F3FB',
+                      borderRadius: 50,
+                    }}>
+                    <Text style={styles.nameIconText}>{c.givenName[0]}</Text>
+                  </View>
+                  <View style={{marginLeft: 16, flex: 1}}>
+                    <Text style={styles.contactName}>
+                      {c.givenName + ' ' + c.familyName}
+                    </Text>
+                    <Text style={styles.contactName}>
+                      {c.phoneNumbers[0].number}
+                    </Text>
+                  </View>
+                </View>
+              </View>
+            ))}
+          </ScrollView>
+          <SolidButton
+            color="#6739B7"
+            title="Add Saviours"
+            activeButton={true}
+            onPress={() => {
+              sheet.close();
+            }}></SolidButton>
+        </View>
+      </RBSheet>
+    </>
   );
 };
 
@@ -261,4 +388,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SettingsTab;
+export default SavioursTab;

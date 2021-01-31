@@ -11,52 +11,50 @@ import Balls from './Balls';
 import styled from 'styled-components';
 import LongButton from './LongButton';
 import globalData from '../Globals';
-import auth from '@react-native-firebase/auth';
 
-class RegistrationName extends React.Component {
+class RegistrationPIN extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      name: '',
+      pin: '',
       navigation: props.navigation,
       route: props.route,
     };
-    this.setName = this.setName.bind(this);
+    this.confirmPIN = this.confirmPIN.bind(this);
   }
 
-  setName() {
-    let user = auth().currentUser;
-    user.updateProfile({
-      displayName: this.state.name,
+  confirmPIN = () => {
+    globalData.pin = this.state.pin;
+    this.state.navigation.reset({
+      routes: [{name: 'Landing'}],
     });
-    this.state.navigation.navigate('RegistrationSaviours');
-    // this.state.navigation.reset({
-    //   routes: [{name: 'Landing'}],
-    // });
-  }
+  };
 
   render() {
     return (
       <SafeAreaView>
         <View>
           <Balls />
-          <Text style={styles.banner}>Hey, I’m TrackMolly!</Text>
+          <Text style={styles.banner}>Privacy is important! 🔓</Text>
           <View style={styles.frame}>
             <View style={styles.inner}>
-              <Text style={styles.text}>What’s your name ? 😀</Text>
+              <Text style={styles.text}>Set a 3-digit security PIN 🔑 </Text>
+
               <TextInput
-                style={styles.nameInput}
+                style={styles.otpInput}
                 selectionColor="#6739b7"
-                keyboardType="name-phone-pad"
-                value={this.state.name}
+                secureTextEntry={true}
+                keyboardType="numeric"
+                value={this.state.pin}
                 onChangeText={(val) => {
                   this.setState({
-                    name: val,
+                    pin: val,
                   });
-                }}></TextInput>
+                }}
+                maxLength={3}></TextInput>
             </View>
             <ButtonGroup>
-              <LongButton title="Continue" onPress={this.setName} />
+              <LongButton title="Confirm" onPress={this.confirmPIN} />
             </ButtonGroup>
           </View>
         </View>
@@ -68,7 +66,6 @@ class RegistrationName extends React.Component {
 const styles = StyleSheet.create({
   banner: {
     position: 'absolute',
-    width: '100%',
     height: 33,
     left: 24,
     top: 74,
@@ -97,7 +94,6 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
   },
   inner: {
-    width: '100%',
     height: 148,
     top: 0,
     left: 0,
@@ -114,14 +110,17 @@ const styles = StyleSheet.create({
     color: '#6739B7',
     lineHeight: 30,
   },
-  nameInput: {
+  otpInput: {
     position: 'absolute',
     backgroundColor: '#eee',
     bottom: 0,
-    width: '100%',
+    width: 5,
+    width: '40%',
+    marginLeft: 100,
     fontWeight: '600',
     fontSize: 32,
     color: '#6739B7',
+    letterSpacing: 25,
   },
   verify: {
     right: 24,
@@ -140,4 +139,4 @@ const ButtonGroup = styled.View`
   margin: 0px;
 `;
 
-export default RegistrationName;
+export default RegistrationPIN;
