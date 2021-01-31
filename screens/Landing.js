@@ -331,6 +331,7 @@ class Landing extends React.Component {
             title="Send Alert"
             color={'#FF6D0A'}
             activeButton={true}
+            onPress={this.fadeOut}
           />
         )}
         {!this.state.alertButtonActive && (
