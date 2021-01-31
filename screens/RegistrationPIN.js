@@ -11,6 +11,7 @@ import Balls from './Balls';
 import styled from 'styled-components';
 import LongButton from './LongButton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import globalData from '../Globals';
 
 class RegistrationPIN extends React.Component {
   constructor(props) {
@@ -23,9 +24,37 @@ class RegistrationPIN extends React.Component {
 
   confirmPIN = async () => {
     await AsyncStorage.setItem('@pin', this.state.pin);
-    this.props.navigation.reset({
-      routes: [{name: 'Landing'}],
-    });
+    globalData.showQuickTip(
+      <>
+        <Text
+          style={{
+            fontSize: 14,
+            color: '#6739B7',
+            padding: 6,
+            fontFamily: 'Open Sans',
+          }}>
+          Entering the PIN <Text style={{color: '#FF6D0A'}}>backwards</Text>{' '}
+          would send an <Text style={{color: '#FF6D0A'}}>emergency alert</Text>{' '}
+          to your trusted contacts!
+        </Text>
+        <Text
+          style={{
+            fontSize: 14,
+            color: '#6739B7',
+            padding: 6,
+            fontFamily: 'Open Sans',
+          }}>
+          For e.g. If your PIN is <Text style={{color: '#FF6D0A'}}>123</Text> ,
+          entering <Text style={{color: '#FF6D0A'}}>321</Text> triggers an
+          emergency alert
+        </Text>
+      </>,
+      () => {
+        this.props.navigation.reset({
+          routes: [{name: 'Landing'}],
+        });
+      },
+    );
   };
 
   render() {

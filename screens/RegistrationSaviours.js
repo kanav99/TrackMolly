@@ -48,7 +48,24 @@ class RegistrationSaviours extends React.Component {
         );
       }
     }
-    this.props.navigation.navigate('RegistrationPIN');
+    globalData.showQuickTip(
+      <>
+        <Text
+          style={{
+            fontSize: 14,
+            color: '#6739B7',
+            padding: 6,
+            fontFamily: 'Open Sans',
+          }}>
+          Pressing Power button <Text style={{color: '#FF6D0A'}}>5 times</Text>{' '}
+          in succession triggers an{' '}
+          <Text style={{color: '#FF6D0A'}}>emergency alert</Text>.
+        </Text>
+      </>,
+      () => {
+        this.props.navigation.navigate('RegistrationPIN');
+      },
+    );
   };
 
   onSkip = () => {

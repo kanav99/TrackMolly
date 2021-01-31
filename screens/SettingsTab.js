@@ -105,7 +105,6 @@ const SettingsTab = ({route}) => {
                     color="#FF6D0A"
                     onPress={() => {
                       console.log('fuck');
-                      notify();
                     }}
                   />
                 </View>
