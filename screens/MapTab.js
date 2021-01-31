@@ -27,7 +27,8 @@ const MapTab = ({navigation, route, screenProps, logs, pushLog}) => {
   // getRating(37.78825, -122.432, (r) => {
   //   console.log(r);
   // });
-
+  var loc = logs[logs.length - 1].location;
+  var rate = logs[logs.length - 1].rating ? logs[logs.length - 1].rating : 'No rating';
   return (
     <SafeAreaView style={{flex: 1}}>
       <Location logs={logs} pushLog={pushLog} />
@@ -39,8 +40,8 @@ const MapTab = ({navigation, route, screenProps, logs, pushLog}) => {
             style={{color: 'white', opacity: 0.6, top: 2}}
           />
           <View style={styles.locationText}>
-            <Text style={styles.text1}>Hinckley & District Museum area</Text>
-            <Text style={styles.text2}>Safety Rating: 4.2/5</Text>
+            <Text style={styles.text1}>{loc}</Text>
+            <Text style={styles.text2}>{rate}</Text>
           </View>
         </View>
       </View>

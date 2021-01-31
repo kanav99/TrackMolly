@@ -11,12 +11,13 @@ import {
   LogBox,
 } from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import Geocoder from 'react-native-geocoding';
 import {TabBar} from './TabBar';
 import SolidButton from './SolidButton';
 import BorderButton from './BorderButton';
 import auth from '@react-native-firebase/auth';
 import RNLocation from 'react-native-location';
-import {addLocation} from '../api/database-helper';
+import {addLocation, getRating} from '../api/database-helper';
 import SettingsTab from './SettingsTab';
 import SavioursTab from './SavioursTab';
 import LogsTab from './LogsTab';
@@ -34,6 +35,7 @@ class Landing extends React.Component {
     this.state = {
       user: auth().currentUser,
       location: null,
+      rate: 0,
       navigation: props.navigation,
       route: props.route,
       showAlertBox: false,
@@ -48,6 +50,7 @@ class Landing extends React.Component {
           status: true,
           latitude: 28.7041,
           longitude: 77.1,
+          rating: 0,
         },
         {
           location: 'Hinckley & District Museum area 2',
@@ -55,6 +58,7 @@ class Landing extends React.Component {
           status: false,
           latitude: 28.7041,
           longitude: 77.102,
+          rating: 0,
         },
         {
           location: 'Hinckley & District Museum area 2',
@@ -62,13 +66,14 @@ class Landing extends React.Component {
           status: false,
           latitude: 28.7041,
           longitude: 77.108,
+          rating: 0,
         },
       ],
     };
     this.sendLocation = {
       x: 0,
       y: 0,
-      name: 'Delhi',
+      name: 'ak',
     };
 
     this.fadeIn = this.fadeIn.bind(this);
@@ -89,6 +94,7 @@ class Landing extends React.Component {
   }
 
   componentDidMount() {
+    Geocoder.init('AIzaSyAiFf80N2skv0zHFHBgWImrunf3tn-ozgM', {language: 'en'});
     RNLocation.configure({
       distanceFilter: 5, // Meters
       desiredAccuracy: {
@@ -143,19 +149,46 @@ class Landing extends React.Component {
         this.setState({location: locations[0]});
         this.sendLocation.x = locations[0].latitude;
         this.sendLocation.y = locations[0].longitude;
-        // addLocation(this.user.uid, this.sendLocation, Date.now());
-        console.log('sent');
-        console.log('yo');
-        const {logs} = this.state;
-        console.log(logs.length);
-        // const ll = logs[logs.length - 1];
-        this.pushLog({
-          location: 'Hinckley & District Museum area 2',
-          time: Date.now(),
-          status: false,
-          longitude: locations[0].longitude,
-          latitude: locations[0].latitude,
+        Geocoder.from(this.sendLocation.x, this.sendLocation.y).then((json) => {
+          this.sendLocation.name = String(json.results[0].formatted_address);
+          addLocation(this.state.user.uid, this.sendLocation, Date.now());
+          console.log('SENNNTTTT' + this.sendLocation);
+          const {logs} = this.state;
+          getRating(this.sendLocation.x, this.sendLocation.y, (r) => {
+            this.setState({rate: r ? r : 0});
+            this.pushLog({
+              location: this.sendLocation.name,
+              time: Date.now(),
+              status: false,
+              longitude: locations[0].longitude,
+              latitude: locations[0].latitude,
+              rating: this.rate,
+            });
+          });
+          // console.log(logs.length);
+          // const ll = logs[logs.length - 1];
+          // console.log('AAAAAAAAAAAAAA' + this.sendLocation.name);
+          // console.log(addressComponent);
         });
+        // console.log('AAAAAAAAAAAAAA' + this.sendLocation.x);
+        // getRating(this.sendLocation.x, this.sendLocation.y, (r) => {
+        //   this.setState({rate: r});
+        // });
+        // console.log('AAAAAAAAAAAAAA' + this.sendLocation.name);
+        // console.log('AAAAAAAAAAAAAA' + this.rate);
+        console.log('sent');
+        // console.log('yo');
+        // const {logs} = this.state;
+        // console.log(logs.length);
+        // // const ll = logs[logs.length - 1];
+        // this.pushLog({
+        //   location: this.sendLocation.name,
+        //   time: Date.now(),
+        //   status: false,
+        //   longitude: locations[0].longitude,
+        //   latitude: locations[0].latitude,
+        //   rating: this.rate,
+        // });
       },
     );
   };
@@ -172,6 +205,8 @@ class Landing extends React.Component {
     this.setState({
       logs,
     });
+    // console.log('THISSSS' + log.location);
+    // console.log('THISSSS' + log.rating);
   };
 
   decrementCounter = () => {

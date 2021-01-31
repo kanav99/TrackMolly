@@ -114,7 +114,7 @@ const removeProtectee = (uid, protectee_id) => {
 const addLocation = (uid, location, time) => {
   user_ref.once('value').then((snapshot) => {
     var value = snapshot.val();
-    // console.log(value);
+    console.log(location + 'RECEIVEDDDDDDDDDDDDDDDDDDDDD');
     for (var key in value) {
       // console.log(value[key]['name']);
       if (value[key]['uid'] == uid) {
