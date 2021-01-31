@@ -17,6 +17,7 @@ class Location extends React.Component {
     this.state = {
       location: null,
     };
+    this.startTracking();
   }
 
   componentWillMount() {
@@ -91,17 +92,20 @@ class Location extends React.Component {
   };
 
   render() {
+    this.startTracking();
     const {location} = this.state;
     return (
-      <MapView
-        style={{flex: 1}}
-        initialRegion={{
-          latitude: 28.64556,
-          longitude: 77.3563884,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
-        }}
-      />
+      location && (
+        <MapView
+          style={{flex: 1}}
+          initialRegion={{
+            latitude: location.latitude,
+            longitude: location.longitude,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+          }}
+        />
+      )
     );
   }
 }
